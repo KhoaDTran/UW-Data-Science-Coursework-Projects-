@@ -1,0 +1,168 @@
+---
+title: "Lab 6: Confidence Intervals and Hypothesis Tests"
+author: "Robert Zito"
+date: "02/27/2020"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(oilabs)
+download.file("http://www.openintro.org/stat/data/nc.RData", destfile = "nc.RData")
+load("nc.RData")
+```
+
+* * *
+
+
+## Exercise 1
+
+```{r}
+mean(nc$lowbirthweight == "low") 
+nc %>% select(lowbirthweight ) %>% table() %>% prop.table()
+```
+*11% of babies had a low birth weight.(Two ways are shown)*
+
+## Exercise 2
+
+```{r}
+nc %>% filter(habit == "smoker") %>% select(lowbirthweight ) %>% table() %>% prop.table()
+```
+*12.29% born to smoking mothers have low birth weight.*
+## Exercise 3 
+
+```{r}
+nc_smoker <- nc %>% filter(habit == "smoker") 
+```
+*126 observations*
+
+## Exercise 4
+
+```{r}
+phat <- 0.143
+n <- 125
+SE <- sqrt(phat*(1-phat)/n)
+multiplier <- 2
+lower <- phat - multiplier*SE
+upper <- phat + multiplier*SE
+lower 
+upper
+```
+
+*Our confidence interval goes form .080 to .205. If we take an infinate number of samples, we can generate an infinate amout of parameters and 95% of the time we expect to get the true parameter to fall withing our confidence interval.*
+
+## Exercise 5
+
+Null Hypothesis: P = 0.1
+Alternative Hypothesis: P > 0.1 or P < 0.1
+
+## Exercise 6
+
+```{r}
+
+null_p <- 0.1
+null_se <- sqrt(null_p*(1-null_p)/n)
+ggplot(data = NULL, aes(x = seq(0,1,by=0.01))) +
+        geom_blank() +
+        stat_function(fun = dnorm, args = c(mean = null_p, sd = null_se))
+```
+
+## Exercise 7
+
+```{r}
+null_p <- 0.1
+null_se <- sqrt(null_p*(1-null_p)/n)
+ggplot(data = NULL, aes(x = seq(0,1,by=0.01))) +
+        geom_blank() +
+        stat_function(fun = dnorm, args = c(mean = null_p, sd = null_se))+geom_vline(xintercept = phat, col = "red")
+```
+
+*The observed p is greater compared to the proportion of the mean of the null hypothesis because it falls on the right.*
+
+## Exercise 8
+
+```{r}
+pval <- 2*pnorm(phat, mean = null_p, sd = null_se, lower.tail = FALSE)
+```
+
+*We fail to reject the null hypothesis. We cant conclude that p is larger than 0.1. *
+
+
+## Exercise 9
+
+```{r}
+popsize <- 100000
+pop <- data.frame(lowbirthweight = c(rep(0, 0.9*popsize), rep(1, 0.1*popsize)))
+```
+
+```{r}
+library(infer)
+set.seed(111)
+p0 <- 0.1
+n <- 126
+true_sd <- sqrt(p0*(1-p0)/n)
+results <- pop %>%
+        infer::rep_sample_n(size = 126, reps = 10000) %>%
+        summarise(phat = mean(lowbirthweight), 
+                  se = sqrt(phat*(1-phat)/126),
+                  me = 1.96 * se,
+                  lower = phat - me,
+                  upper = phat + me,
+                  correct_CI = (lower <= p0 && upper >= p0),
+                  zscore = (phat-p0)/se,
+                  pval = 2*(1-pnorm(abs(zscore))),
+                  reject_null = pval <= 0.05)
+```
+
+Explain each column of ``results":
++ phat = average number of babies with low birth weight
++ se = standard deviation of phat
++ me = 95% confidence interval
++ lower = lower bound of confidence interval
++ upper = upper bound of confidence interval
++ correct_CI = number 
++ zscore = zscore of the mean birth weight
++ pval = p-value calculated from z-score
++ reject_null = number of p-values under or equal to 0.05
+
+## Exercise 10
+
+```{r}
+min(results$phat)
+max(results$phat)
+```
+*The smallest sample proportion is 0.01587302 and the largest sample proportion is 0.2063492.*
+
+## Exercise 11
+
+```{r}
+results%>%filter(correct_CI == TRUE)%>%count()/10000
+```
+*The percent of intervals actually covered 0.1 is 92.5%*
+
+## Exercise 12
+
+```{r}
+results%>%filter(reject_null==TRUE)%>%count()
+```
+*We made type 1 error 747 times.*
+
+## Exercise 13
+
+```{r}
+0
+```
+*We are not going to be running into the type 2 error since, we made a type 2 error 0 times because the null hypothesis is true.*
+
+## Exercise 14
+
+```{r}
+orig_phat <- .143
+p0 <- .1
+orig_se <- sqrt(orig_phat*(1-orig_phat)/126)
+orig_z <- (orig_phat-p0)/orig_se
+orig_z
+nrow(filter(results, zscore >= orig_z))/10000
+```
+*Out of the 10,000 samples the phat from the original sample is 451 that had a z-score as large or larger in magnitude. 451 is the number of cases shown on one side, so when you multiply it by two, it adds up to to about 10% of 10000. Similarly, the original p-value is 10% when looking at the probablility to obtain results like the observed results. The results re approximately the same. 

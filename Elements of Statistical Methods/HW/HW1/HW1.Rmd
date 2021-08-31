@@ -1,0 +1,135 @@
+---
+title: "Stat 311, HW1"
+author: "Khoa Tran"
+date: "Wednesday Jan 15"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(oilabs)
+```
+
+### Instructions
++ This homework is due on Wednesday Jan 15 by midnight. No late work is excused unless prior arrangements have been made with the instructor. The dropbox will remain open for 8 hours past the deadline. However, submissions made during this time will be penalized by at least 20% and maybe even as much as 50%.
++ Please answer ALL questions (including those that do not involve R) in the locations marked in this template. Remember to periodically **knit** your document to check that the output appears as you want it to; you will be turning in your knit html document. 
++ You will need to upload this document in CANVAS. Please be sure to check that your file was uploaded correctly. It does not hurt to screenshot verification of the upload as CANVAS can be glitchy on occasion.
++  Please answer the questions in the order in which they are posed. Write in complete sentences, and support your answers where asked. 
+
+### Reading  (NOT OPTIONAL)
++ Sections 1.2, 1.3, 1.4 in OpenIntro (4th Addition) 
+
+* * *
+
+### Exercise 1: Common sense is not so common
+Identify the flaw(s) in reasoning in the following scenarios. Explain what should have been done differently to warrant the conclusions.
+
+a) The number of Americans living below the poverty line increased from 24,975,000 to 43,569,000 between 1976 and 2009. A government official concludes that poverty has grown more common in these years. 
+
+ 
+   As the years go on, the population of Americans in the United States has increased. So for this conclusion to be supported, the percentage of Americans living below the poverty line has to be evaluated. The number of Americans living below the poverty line could increase but the percentage of Americans below the poverty line could be the same. If the percentage increased then the conclusion would be correct.
+ 
+b) In 1989, New York City (barely) elected its first black mayor: David Dinkins. A large exit poll of randomly selected voters as they left the polling stations predicted larger margins of victory for Dinkins than the official vote counts.
+
+   The large exit poll should have been towards the entire population of people who left the polling station because the randomly selected could have more people that are in favor of Dinkins. The exit poll should be stratified random sampling, having different clusters through a range of locations. 
+   
+c) An army psychologist wants to take a sample of enlisted men to study the prevalence of PTSD by rank.  He obtains a list of all 10,000 enlisted men of various ranks at a base and takes a simple random sample from the list.
+
+   If the psychologist wanted to study the prevalence of PTSD by rank then he shold have split the list of enlisted men of various ranks into their strata based on their rank. Also, should obtain data from a various bases. This would be a stratified random sampling of the enlisted men. 
+    
+d) Oregon is evaluating a new program to rehabilitate prisoner before their release; the object is to reduce the recidivism rate - the percentage who will be back in prison within 2 years. The program involves several months of *bootcamp*. Admission to the program is voluntary. According to a prison spokesman *Those who complete bootcamp are less likely to return to prison. This shows bootcamp really works!*
+ 
+   The conclusion would be more supported if the people who were in the program weren't just volunteers because those volunteers would have been biased towards being rehabilitated. The conclusion would be more supported if all of the participants are picked, instead of just volunteers.  
+
+
+### Exercise 2: Parsing the News
+
+ According to a recent   [headline](http://www.foxnews.com/world/2010/09/16/study-educating-women-saved-lives-million-kids.html), mothers' educational levels are associated with childhood mortalty rates. 
+ 
+a. The following is an excerpt from the article:
+
+<span style="color:red">
+  By using statistical models, the researchers found that for every additional year of education women had, the death rate for children dropped by 10%.
+</span> 
+
+  Using only the information contained in the sentence above, decide if the *education* variable is a numerical or categorical variable. Support your answer very briefly. How about the *death* variable? (Remember: simply saying *it takes numbers* is not a justification)
+   
+   The variable *education* is a categorial variable as it has no numerical integrity since it is used to place the mothers into different categories. The other variable *death* is numerical because it is the death rate of children, which are values that doesn't place indiviudals to categories and are thought of as numbers that can be subtracted or added.
+  
+b. In this study, the years of education for women, and the child mortality rates  were measured at the country-level for 175 developing countries. Read the section titled *Why Observational Units Matter* at the end of the slidedeck *Data Basics* posted in the Lecture Notes tab. Then comment on whether the statement made in the title of the news article is warranted. (Your answer must only reference points made in the slidedeck listed, nothing else)
+
+   The observational unit has to be noted as the women were measured at the country-level for 175 developing countries. Even though the child mortality rate has increased along with the years of education for women, there could be other factors based on the developing countries that could lead to increase child mortality rate. This conclusion could be correct but the observational unit of women and child measured in developing countries is important to note. The observational unit should be at the country level as a whole. 
+
+### Exercise 3: Keywords in Sampling
+
+For each study, identify the *target population*, the *parameter of interest* and the *value of the statistic*. (Please indicate your answers for each keyword in complete sentences and be very specific. Don't say number (or amount) if you mean percentage for instance. ) 
+
+a) A petroleum product refinery wants to estimate the average cetane number of the diesel fuel produced at their refinery. So they take a random sample of 7 batches of fuel and measure the cetane number of each batch. The data is shown below:
+
+50.3580, 47.5414, 47.6311, 47.6657, 47.7793, 47.2890, 47.5472
+
+
+```{r, echo=T}
+y <- c(50.3580, 47.5414, 47.6311, 47.6657, 47.7793, 47.2890, 47.5472)
+x <- mean(y)
+x
+
+```
+  
+
+  The target population is all of the diesel fuel produced at the pretroleum refinery. The parameter of interest is the average cetane number of each batch. The value of the statistic based on the random sample of 7 diesel fuel batch is 47.8731 cetane.
+
+b) The Department of Transportation takes a representative sample of 270 motorcycle helmets for impact testing. 10% of the helmets tested failed. 
+
+   The target population is all motorcycle helments under the jurisdiction of the Department of Transportation. The parameter of interest is the percentage of motorcycle helments failed the impact test. The value of the statistic is 10% of the helmets failed from the sample of 270 motorcycle helmets. 
+   
+c) In a recent [poll](https://thehill.com/hilltv/rising/461593-poll-voters-name-biden-as-winner-of-third-democratic-debate) after the last Democratic Presidential debate, 33% of respondents said they were unsure which of the 10 candidates on stage won the debate. 
+
+  The target population is all of the respondents of the Democratic debate. The parameter of interest is the highest percentage of respondents who thought a specific candidate did the best in the Democratic debate. The value of the statistic is 33% of respondents were unsure.
+  
+### Exercise 4: Biased sampling 
+Each of the *sampling designs*  below is *biased*. State why. Will estimates be too large or too small? Support your answer.  
+
+a) You want to know the % UW students who are in a fraternity or sorority. You take a random sample of 100 students at a Husky football game and ask them.
+ 
+   The sampling design above is selection bias because the students at the Husky football game are more likely to be in fraternity or sorority as this is poor sampling design. The estimates will be too large. 
+ 
+b) You want to estimate the average length of pieces of string in a bag, so you reach in, mix up the strings, select one, mix them up again, select another, and so on.
+
+   This sampling design is selection bias because you'll be picking pieces of strings that are longer since there's more surface area to be touched. This is poor sampling design and should be measured for all pieces of string. The estimates will most likely be too large.
+  
+c) In a study to estimate average education levels for different racial groups in San Francisco, it was necessary to draw a sample of Japanese Americans. Four representative blocks from Japantown were selected and all persons resident in the area were chosen for the sample.  
+
+   This sampling design is selection bias as the sample of Japanese Americans will only be from Japantown and isn't representative of the entire San Francisco. The estimates are most like too small as Japanese in other areas are more likely to have higher education levels. 
+   
+d) The Museum of Fine Arts (MFA) in Boston wants to estimate the % of tourists who planned their trip mainly to visit the museum. The sample will consist of all out of town visitors to the museum. Upon buying tickets, patrons will be asked whether they came from out of town and if so, what the main reason for their visit was.
+  
+   This sampling design could have response bias as the tourists might feel obligated to say that the main reason for their visit is to see the Museum of Fine Arts. The question is sensitive as respondants could be more less inclined to give information about why they truly visited, as a result, the estimates could be too high. 
+
+### Exercise 5: Vitamin Supplements
+Page 35, problem 1.30 parts (a) -- (e)
+To assess the effectiveness of taking large doses of vitamin C in reducing
+the duration of the common cold, researchers recruited 400 healthy volunteers from staff and students at a university. A quarter of the patients were assigned a placebo, and the rest were evenly divided between 1g Vitamin C, 3g Vitamin C, or 3g Vitamin C plus additives to be taken at onset of a cold for the following two days. All tablets had identical appearance and packaging. The nurses who handed the prescribed pills to the patients knew which patient received which treatment, but the researchers assessing the patients when they were sick did not. No significant differences were observed in any measure of cold duration or severity between the four groups, and the placebo group had the shortest duration of symptoms.
+
+(a) Was this an experiment or an observational study? Why?
+
+   Experiment because they are split into groups by random assignment.
+
+(b) What are the explanatory and response variables in this study?
+
+   The explanatory variables are the dossage of Vitamin C additives. The response variables are the length of cold or severity of cold.
+
+(c) Were the patients blinded to their treatment?
+
+   Yes, since the volunteers don't know what pill they took.
+
+(d) Was this study double-blind?
+
+   Yes because the assesment came from researchers, which did not knowing what pill were given to a particular paitent.
+
+(e) Participants are ultimately able to choose whether or not to use the pills prescribed to them. We might expect that not all of them will adhere and take their pills. 
+Does this introduce a confounding variable to the study? Explain your reasoning.
+
+   Yes it does. For one, the people taking the placebo may not take the full prescribed dosage if they don’t feel an effect. In addition, if they don’t take the pills, then the confounding variable would be whether or not they took the pills. At the same time, there is the same probability that all of the groups wouldn't take the pill, which results in no confounding variable. However, if there is a difference in the groups in the amount of people who didn't take the pill, then there would be a confounding variable. 

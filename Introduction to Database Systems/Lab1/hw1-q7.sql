@@ -1,0 +1,1 @@
+select * from RestaurantsVisited where distance <= 10;

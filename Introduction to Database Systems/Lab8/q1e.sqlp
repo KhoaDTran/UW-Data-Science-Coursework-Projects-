@@ -1,0 +1,9 @@
+USE hw8;
+
+SELECT y.`-car_code` as country_code, y.name as country_name, seas_list as sea
+FROM hw8.world as x, x.mondial.country as y
+	LET seas_list = (SELECT s.name as sea 
+					FROM x.mondial.sea as s
+					WHERE y.`-car_code` in split(s.`-country`, " "))
+WHERE ARRAY_LENGTH(seas_list) >= 2
+ORDER BY ARRAY_COUNT(seas_list) DESC;

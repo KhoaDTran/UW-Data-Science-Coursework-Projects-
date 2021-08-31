@@ -1,0 +1,11 @@
+USE hw8;
+
+SELECT y.name as country, y.population as population, num_reg as num_religions
+FROM hw8.world as x, x.mondial.country as y
+	LET num_reg = (CASE WHEN y.religions IS MISSING 
+		  	  	  THEN 0
+		  	      WHEN IS_ARRAY(y.religions)
+		  	  	  THEN ARRAY_COUNT(y.religions)
+		  	  	  ELSE 1 END)
+ORDER BY y.name;
+

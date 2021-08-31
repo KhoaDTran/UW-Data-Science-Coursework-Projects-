@@ -1,0 +1,116 @@
+---
+title: "The Normal Distribution"
+author: "Khoa Tran"
+date: "02/06/2020"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(oilabs)
+fastfood <- read.csv("http://anna-neufeld.github.io/Stat311/oiLabs/Week5/fastfood.csv")
+mcdonalds <- fastfood %>%
+  filter(restaurant == "Mcdonalds")
+dairy_queen <- fastfood %>%
+  filter(restaurant == "Dairy Queen")
+```
+
+* * *
+
+### Exercise 1: 
+
+```{r}
+ggplot(data = mcdonalds, aes(x = cal_fat)) + geom_histogram(binwidth = 80)
+ggplot(data = dairy_queen, aes(x = cal_fat)) + geom_histogram(binwidth = 80)
+```
+
+### Exercise 2:
+
+The dairy queen distribution is more symmetric.
+
+### Exercise 3: 
+
+```{r}
+dqmean <-mean(dairy_queen$cal_fat)
+dqsd   <- sd(dairy_queen$cal_fat)
+ggplot(data = dairy_queen, aes(x = cal_fat)) +
+        geom_blank() +
+        geom_histogram(binwidth = 80, aes(y = ..density..)) +
+        stat_function(fun = dnorm, args = c(mean = dqmean, sd = dqsd), col = "tomato")
+```
+
+According to this plot, it does appear that the data follows a nearly normal distribution.
+
+### Exercise 4
+
+```{r}
+ggplot(data = dairy_queen, aes(sample = cal_fat)) + 
+  stat_qq() + 
+  stat_qq_line()
+sim_norm <- rnorm(n = nrow(dairy_queen), mean = dqmean, sd = dqsd)
+ggplot(data = NULL, aes(sample = sim_norm)) + 
+  stat_qq() + 
+  stat_qq_line()
+```
+
+All the points do not fall on the line for either graph. Both have some randomness to them.
+
+### Exercise 5
+
+```{r}
+source("https://anna-neufeld.github.io/Stat311/oiLabs/Week5/qqnormsim.R")
+qqnormsim(sample = cal_fat, data = dairy_queen)
+```
+
+They are nearly normal because the data from known normal distributions have relativey the same range of data points as the unknown distribution type data.
+
+### Exercise 6
+
+```{r}
+source("https://anna-neufeld.github.io/Stat311/oiLabs/Week5/qqnormsim.R")
+qqnormsim(sample = cal_fat, data = mcdonalds)
+```
+
+### Exercise 7
+
+The normal Q-Q plot does not look similar to the ones created with simulated data. They don't provide evidence that the calories from fat at McDonalds are nearly normal.
+
+### Exercise 8
+
+```{r}
+(nrow(dairy_queen %>% filter(cal_fat < 500))) / (nrow(dairy_queen))
+```
+
+
+### Exercise 9
+
+```{r}
+1 - pnorm(q = 500, mean = dqmean, sd = dqsd)
+```
+
+### Exercise 10
+
+```{r}
+x <- pnorm(q = 600, mean = dqmean, sd = dqsd)
+y <-pnorm(q = 400, mean = dqmean, sd = dqsd)
+x-y
+```
+
+
+### Exercise 11
+
+```{r}
+mcmean <-mean(mcdonalds$cal_fat)
+mcsd   <- sd(mcdonalds$cal_fat)
+theo <- (1 - pnorm(q = 900, mean = mcmean, sd = mcsd))
+empir <- (nrow(mcdonalds %>% filter(cal_fat >900))) / (nrow(mcdonalds))
+print (theo)
+print(empir)
+```
+
+The theoretical and empirical probability differs by a factor of 10.
+
+
+
+
+

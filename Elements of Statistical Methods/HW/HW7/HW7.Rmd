@@ -1,0 +1,191 @@
+---
+title: "Stat 311, HW7"
+author: "Khoa Tran"
+date: "Wednesday March 11"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+library(tidyverse)
+```
+
+### Instructions
++ This homework is due on Wednesday March 11 by midnight. No late work is accepted unless prior arrangements have been made with the instructor.
++ Please answer ALL questions (including those that do not involve R) in the locations marked in this template. Remember to periodically **knit** your document to check that the output appears as you want it to; you will be turning in your knit html document. 
++ You will need to upload this document in CANVAS. Please be sure to check that your file was uploaded correctly. It does not hurt to screenshot verification of the upload as CANVAS can be glitchy on occasion.
++  Please answer the questions in the order in which they are posed. Write in complete sentences, and support your answers where asked. 
+
+### Reading (NOT OPTIONAL)
++ Sections 7.1, 7.2, 7.3
+
+* * *
+
+
+### Exercise 1: College credits
+
+Exercise 7.50 on page 299
+
+a. By looking at the sample statistics, the point estimate for the average number of credits taken per semester by each student is 13.65 credits. Median number of credits taken per semester by students at this college is 14 credits.
+
+  b. The point estimate of the SD on the number of credits taken per semester by students at this college is 1.91. The IQR is Q3-Q1 = 15-13 = 2.
+
+  c. The Z score for a course load of 16 credits is (16-13.65)/1.91 = 1.23. This is unusual because this is less than 2 SD away from the mean. The Z score for a load of 18 credits is 18-13.65/1.91= 2.277. This is unusual as it is more than 2 SD away from the mean.
+
+  d. No, the counselor should not be surprised to find another mean value for sampling another 100 students. It is normal to find different means for different samples, because point estimates approximates given population parameter and not the population as a whole. 
+
+  e. We can use standard error to quantify the variability of the estimate. SE = s/sqrt(n) = 1.91/sqrt(100) = 0.191.
+
+
+### Exercise 2: Age at first marriage Part 1.
+
+Exercise 7.56 on page 302
+
+```{r}
+LB = 23.44-1.96*4.72/sqrt(5534)
+UB = 23.44+1.96*4.72/sqrt(5534)
+x=c(LB,UB)
+x
+```
+We are 95% confident that the average age of first marriage of females in the US is between 23.3 years to 23.6 years.
+
+### Exercise 3: Gaming and distracted eating Part II
+
+Exercise 7.48 on page 299
+
+H0: u1 = u2 and HA: u1-u2=0. 
+t = (xbar1 - xbar2 )/( s1^2/√n1 + s2^2/√n2 ) = (4.9 - 6.1) / 1.8^2/√22 + 1.8^2/√22) = -2.211. Df = n1 + n2 -2 = 42.
+From t table, the critical value is- 2.018 and since -2.211 < - 2.018, we reject the null hypothesis. In conclusion, the average number of food items recalled by the patients in the treatment is less than the average number if find items recalled by the control group.
+
+### Exercise 4: Difference in quiz scores
+
+The file [scores.txt](https://drive.google.com/open?id=17iygEuip7rgBYS079L2yRQt8fwFETiFO) contains quiz 1 and quiz 2 scores for each student (de-identified) in STAT 311 this quarter. 
+
+(a) Is this data one sample, two independent samples or paired sample data?
+
+paired sample
+
+(b) Make a scatter plot to see if there is an association between a students' quiz 1 and quiz  scores. Write a couple of sentences describing the strengh, direction and form of the relationship, if any.
+
+```{r}
+scores <- read.csv("scores.csv")
+ggplot(data = scores, aes(x = quiz2, y = quiz1)) + geom_point(color = "red")
+```
+From the graph, we can see that there is a positive correlation between quiz 1 and 2 scores. Looking at the graphs, students either did good on both or bad on both quizzes, but at the same time, there are some students that had tremendous improvement or regression from quiz 1 to quiz 2. From this, it shows me that there is somewhat of a strong correlation between the two quiz scores.
+
+(c) Estimate the difference in mean quiz scores using a 90% confidence interval and interpret in context. Be sure to use the appropriate method based on your answer in part (a).
+
+```{r}
+scores <- scores %>% mutate(differences = quiz2 - quiz1)
+mean_scores <- mean(scores$differences)
+sd_scores <- sd (scores$differences)
+se <- qt(0.95, nrow(scores) - 1)*(sd_scores / sqrt(nrow(scores)))
+mean_scores + se
+mean_scores - se
+```
+We are 90% confident that the difference in scores between quiz 2 and quiz 1 is a downward trend, with differences in the score of -0.127 to -0.879.
+
+### Exercise 5: Class Data
+
+You will be working with the Stat 311 class survey data. To start, we should load this data and also load the tidyverse. 
+
+```{r load-data}
+library(tidyverse)
+classdat <- read.csv("http://anna-neufeld.github.io/Stat311/oiLabs/Week5/classdat.csv")
+```
+
+``classdat`` contains the (anonymous) responses to the Stat 311 survey from the first week of the quarter. Our variable of interest within this dataset will be ``height``, the self-reported height (in inches) of individuals in the class. Our goal is to estimate the population parameter $\mu=$average height (inches) of all female students at UW. For the purposes of this question, we will treat the students in Stat 311 who answered this question as a random sample from the full UW student body.
+
+### Part A
+
+In the ``classdat`` dataset, there were 70 students who identified as female and 88 students who identified as male.  Using ``filter``, create a dataset called ``femaleclassdat`` that stores only the individuals who report ``gender=="female"``. 
+
+```{r}
+femaleclassdat <- classdat %>% filter(gender == "female")
+```
+
+
+### Part B
+
+Once you have your data of female heights, use ``summary(femaleclassdat$height)`` to print a 5-number summary of this data. You should notice some data anomalies that will affect our inference. For the purposes of this assignment, assume that no adult human can be less than 10 inches tall. Use ``filter`` to create a new dataset, ``femaleclassdat2``, that contains only females with self-reported height greater than 10 inches.
+
+```{r}
+summary(femaleclassdat$height)
+femaleclassdat2 <- femaleclassdat %>% filter(height > 10)
+summary(femaleclassdat2$height)
+```
+
+
+### Part C
+
+Now that you have "cleaned" the data to only include females with valid height data, report the mean ($\bar{x}$), the sample standard deviation $s$, and the sample size of your sample. Save these values as `xbar`, `s`, and `n`, but also print their values here. 
+
+```{r}
+xbar <- mean(femaleclassdat2$height)
+s <- sd(femaleclassdat2$height)
+n <- nrow(femaleclassdat2)
+xbar
+s
+n
+```
+
+### Part D
+
+According to the CDC, the average height of female american adults is 63.6 inches with a standard deviation of 2.5 inches. You want to know if the average height of females at UW ($\mu$) is the same as the average female height in the full United States, or if it is different due to the young average age of UW students and the fact that UW students come from all over the world. So you will be testing the null that $\mu = 63.6$.
+
+Compute a test statistic for this hypothesis test (call it `t`), note the degrees of freedom you are using (call it `df`), and then use ``pt(t, df)`` to compute a p-value (note that you may need to subtract the value from 1 and/or multiply it by 2 to get a final p-value). What do you conclude? 
+
+```{r}
+t = (xbar - 63.6)/(s / sqrt(n))
+df = n - 1
+p <- (1 - pt(t, df)) * 2
+```
+
+We can reject the null because the p-value is 0.002382, meaning that the number of values that are more extreme than the null is 0.23%. 
+
+### Part E
+
+Recall that a p-value tells us "The probability of observing a sample as or more extreme than our own in a world where the null hypothesis is true". Let's see that in practice. The following code creates a hypothetical population of size 20,000 (the approximate number of female students at UW) where the heights are normally distributed with mean and standard deviation equal to the values reported by the CDC. The code then takes 100,000 samples of size 66 from the population and records the mean and standard deviation of the heights from each sample. 
+
+```{r}
+library(infer)
+set.seed(111)
+pop <- data.frame(height=rnorm(40000, mean = 63.6, sd = 2.5))
+results <- pop %>%
+        rep_sample_n(size = 66, reps = 100000) %>%
+        summarise(xbars = mean(height), 
+                  sds = sd(height))
+```
+
+Use ``mutate`` to add a new column called ``ts`` to results; ``ts`` should store the test statistics for testing $\mu=63.6$ for each of the 100000 samples. 
+
+```{r}
+results <- results %>% mutate(ts = (results$xbars - 63.6)/(results$sds / sqrt(n)))
+```
+
+
+### Part F
+
+In what proportion of the 100,000 samples did you get a test statistic whose absolute value exceeded your value from part D? Relate this value to your original p-value.
+
+```{r}
+results %>% mutate(abs_ts = abs(ts)) %>% filter(abs_ts > t) %>% summarize(n()) / 100000
+```
+
+The proportion of the 100,000 samples that exceeded the value from part D is 0.00212 which is the same as the p-value
+. 
+### Part G
+
+The following code creates a histogram of the sample means from the 100,000 samples that you drew from the hypothetical population where the null hypothesis was true. The Stat 311 class survey sample is shown in red. Explain this plot to a friend who is not familiar with statistics; do you have strong evidence that the average height of females at UW is not equal to the CDC's reported average height of females in the United States? 
+
+```{r, eval=FALSE}
+ggplot(data=results, aes(x=xbars)) + geom_histogram() + geom_vline(xintercept=xbar, col="red", lty=2)
+````
+There is strong evidence that the average height of females at UW is not equal to CDC's average height of females in the United States. The average height of females in United States is 64.64 inches. While, the graph shows that the average height of females is 63.57 inches. Computing the z-score of the CDC's average height, relative to the simulated distribution of female heights in UW, it comes to 3.47 standard deviations away from mean. This means that less than 1% of heights are more extreme to the CDC's reported height of females. As a result, sampling error is the reason for the difference in heights.   
+
+
+
+
+

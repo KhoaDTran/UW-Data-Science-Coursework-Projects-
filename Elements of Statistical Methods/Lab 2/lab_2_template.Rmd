@@ -1,0 +1,103 @@
+---
+title: "Lab 2: Exploring Categorical Data"
+author: "Khoa Tran"
+date: "01/23/2020"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+cdc <- read.table("http://www.stat.uchicago.edu/~yibi/s220/labs/data/cdc.dat", header=TRUE)
+```
+
+* * *
+
+### Exercise 1: 
+
+```{r}
+cdc <- cdc %>% mutate(genhlth = ordered(genhlth, 
+                                        levels=c("poor", "fair", "good", 
+                                                 "very good", "excellent"))) 
+cdc %>% select(genhlth) %>% table() %>% prop.table()
+```
+
+The proportion of the sample reports being in poor health is 0.03 with a percentage of 3.39%.
+
+### Exercise 2:
+
+```{r}
+ggplot(data = cdc, aes(x = genhlth)) +
+  geom_bar()
+```
+
+
+### Exercise 3:
+
+```{r}
+cdc <- cdc %>% mutate(BMI = (weight/((height)^2) * 703))
+avgBMI <- cdc %>% summarize(mean = mean(BMI))
+avgBMI
+```
+
+### Exercise 4:
+
+```{r}
+ggplot(cdc, aes(x=genhlth, y=BMI)) + geom_boxplot()
+```
+
+The relationship between general health and BMI is that the average BMI goes down as the general health goes up from poor to excellent. The value of IQR becomes lower as well due to less deviation from the standard. 
+
+### Exercise 5
+
+```{r}
+cdc %>% select(smoke100) %>% table() %>% prop.table()
+```
+
+The proportion of individuals in the dataset that smokes more than 100 times in their lifetime is at 0.47 with a percentage of 47.21%.
+
+### Exercise 6
+
+```{r}
+cdc %>% select(smoke100, genhlth) %>% table() %>% prop.table()
+```
+
+The number 0.02240 represents the proportion of people who evaluated their general health as poor and has also smoked at least 100 ciagarettes in their lifetime out of all observations. 
+
+### Exercise 7
+
+```{r}
+cdc %>% select(smoke100, genhlth) %>% table() %>% mosaicplot(color=TRUE)
+```
+
+The box corresponding to excellend and y should have an area that is 8.89% of the area of the entire plot due to the table representing the proportion of each general health and smoking evaluation as the specific proportion is rounded to 0.09. 
+
+### Exercise 8
+
+```{r}
+cdc %>% select(smoke100, genhlth) %>% table() %>% prop.table(2)
+```
+
+Among the individuals that evaluated as poor health, 66.17% of the individuals have smoked at least 100 cigarettes in their lifetime as the proportion is 0.66. 
+
+### Exercise 9
+
+Among individuals who consider themselves to be in excellent health, 38.18% of the individuals have smoked at least 100 times throughout their lifetime as the proportion is 0.38.
+
+### Exercise 10
+
+```{r}
+ggplot(cdc, aes(x=genhlth, fill=smoke100))+geom_bar(position="fill")
+```
+
+There seem to be a correlation between smoking status and general health as the percentage count of people who have not smoked increases as the health status increases from poor to excellent. Additionally, the percentage of count of individuals who has smoked decreases as the health rating change from poor to excellent. 
+
+
+### Exercise 11
+
+```{r}
+ggplot(cdc, aes(x=genhlth, fill=smoke100))+geom_bar()
+```
+
+This plot isn't as useful as the previous plot because the y axis is the count of individuals who reported either no or yes on smoking but it is limited to the count of each individual general health evaluation. Since there is more people that evaluated as very good or excellent compared to poor, the count of individuals that either have smoked or not in those cateogies is much more than the poor health category. The previous chart has is an evaluation of the proportion of distribution of individuals who either have smoked or not, given each value of general health. The previous chart is not based on all obeservations, but all observations of each categorial variable in general health. 
+

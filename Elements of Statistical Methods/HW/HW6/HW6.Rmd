@@ -1,0 +1,171 @@
+---
+title: "Stat 311, HW6"
+author: "Khoa Tran"
+date: "Wednesday Mar 4"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(oilabs)
+```
+
+### Instructions
++ This homework is due on Wednesday Mar 4 by midnight. No late work is excused unless prior arrangements have been made with the instructor. The dropbox will remain open for 8 hours past the deadline. However, submissions made during this time will be penalized by at least 20% and maybe even as much as 50%.
++ Please answer ALL questions (including those that do not involve R) in the locations marked in this template. Remember to periodically **knit** your document to check that the output appears as you want it to; you will be turning in your knit html document. 
++ You will need to upload this document in CANVAS. Please be sure to check that your file was uploaded correctly. It does not hurt to screenshot verification of the upload as CANVAS can be glitchy on occasion.
++  Please answer the questions in the order in which they are posed. Write in complete sentences, and support your answers where asked. 
+
+### Reading  (NOT OPTIONAL)
++ Sections 5.2, 5.3, 6.1 in OpenIntro (4th Addition) 
+
+* * *
+### Exercise 1: True or false and explain briefly
+
+a) A type 1 error occurs anytime we reject the null hypothesis
+
+  False because a type 1 error occurs when the null hypoethesis is rejected in favor of the alternative hypothesis when the null hypothesis is true.
+
+b) If the p-value is 0.03, the corresponding test will reject at a level of significance of 0.02.
+
+  False because since the p-value is larger than the level of significance, the data is not suprising enough to reject the null hypoethesis, so basically the p-value >= level of significance would not reject. 
+
+c) The p-value is a random variable. 
+
+  True because p-value is based on the distribution of a test statistic that is supposed to be randomly sampled, and a random variable is a variable whose values depend on outcomes of a random phenomeno, which means that p-value is a random variable.
+
+d) We can interpret the confidence interval (0.393, 0.553) by saying there is a 95\% chance that the population \% will fall between 0.393 and 0.553.
+ 
+  False because the confidence interval that is 95% percent confident results in the true proportion which will lie between .393 and .553, which is a concise difference
+  
+### Exercise 2: Pew Research
+
+In a Pew Research Center poll of 745 randomly selected American adults, 589 said that it is morally wrong to not report all income on tax returns. 
+  
+a) In words, what is the parameter of interest? 
+ 
+  The parameter of interest is the proportion of American adults who say that it is morally wrong to not report all income on tax returns.
+
+b) Use sample results to construct a 98\% confidence interval estimate of the parameter. 
+
+  p_hat is 589/745, approximately 0.7906.
+  To find the standard error, need to take (p_hat)*(1-p_hat), divide by n, and the square root. Since n is 745, and SE is approximately .015, we need to multiply standard error by the confidence level. The confidence level multiplier for a 98% confidence interval is 2.326, so multiply SE by 2.326 and the confidence interval is (.7559, .8253). 
+  The confidence statement: We are 98% confident that the proportion of American adults who say that is morally wrong to not report all income tax returns falls in the interval of .7559 to .8253.
+
+c) Assume that we plan to conduct another poll to determine whether the given sample results are accurate. How many adults would we need to poll in order to have 98\% confidence that the (quick) margin of error is 0.02? Show your calculations below.
+
+  Around 2,240 adults, in order to achieve that, it's necessary to reverse the work of finding the margin of error. The margin of error equation is (1-p_hat)*(p_hat), divide by n,take square root, and multiply by confidence level multiplier to find margin of error. Now we have margin of error to be 0.02. Divide .02 by the confidence level multiplier for 98%, which is 2.326. Then square it to get rid of the square root. Multiply both sides by n, and then divide both sides by (margin of error/cl multiplier)^2 to isolate n on the left. The answer for n turns out to be (p_hat)(1-p_hat)(cl multiplier^2) all over (margin of error)^2, which comes out to be approximately 2,239.2.
+ 
+d) Unfortunately, an important condition necessary for inference may be violated here. what might this be?   (No help will be given on this question. Please do not discuss this with anyone.)
+
+The three important conditions to check: the random condition, the normal condition, and the independence condition. The random condition forces so that the sample be done randomly, which in this case is true. The normal condition requires that np >= 10 and n(1-p) >= 10, which is also true. Last, for the independence condition, which is if you sample without replacement, one must sample 10% or less. The American adult population is minimum of 209 million, so 2,400 is less than 10%. The only condition that seems to be most violated is the independence condition, due to the fact that the sampling is done without replacement.
+
+
+### Exercise 3: Type 1 and Type 2 errors
+
+a) J \& T each want to test if the proportion of adults in their neighborhood who have graduated from high school is 0.94, as claimed in the newspaper. J takes a random sample of 200 adults and uses $\alpha=0.05$. T takes a random sample of 500 adults and uses $\alpha=0.05$. Suppose the newspaper's percentae is actually right.
+
+(i) Is it possible for either J or T to make a type 1 error? If yes, who is more likely to do so? If no, why not?
+
+Yes, it is possible for either J or T to make a type 1 error. Out of the two, both are equally likely to make a type 1 error because of the null being true. When the null is true, p-values are uniformly distributed between 0 and 1, so the probability that the null is rejected is alpha. Both of them use an alpha of .05, and that does not depend on sample size. So both are equally likely.
+
+(ii) Is it possible for either J or T to make a type 2 error? If yes, who is more likely to do so? If no, why not?
+
+It is not possible for either J or T to make a type 2 error because to make a type 2 error, the alternative hypothesis should be right. Since we know that the null hypothesis, which is the newspaper's percentage is right results towards a type 2 error that cannot occur.
+
+b) J \& T each want to test if the proportion of adults in their neighborhood who took chemistry in high school is 0.25, as claimed in the newspaper. J takes a random sample of 200 adults and uses $\alpha=0.05$. T takes a random sample of 500 adults and uses $\alpha=0.05$. Suppose the newspaper's percentae is actually wrong.
+
+(i) Is it possible for either J or T to make a type 1 error? If yes, who is more likely to do so? If no, why not?
+
+It is not possible for either J or T to make a type 1 error because to make a type 1 error, the null hypothesis should be actually right. Since we know that the null hypothesis from the newspaper's percentage is wrong, so a type 1 error cannot occur.
+
+(ii) Is it possible for either J or T to make a type 2 error? If yes, who is more likely to do so? If no, why not?
+
+It's possible for both to make a type 2 error because the fact that we know the null hypothesis is wrong, which is 0.25. It is possible that one or both may fail to reject the null hypothesis. J is more likely to make a type 2 error since we know the expected value isn't the newspaper number, and the null hypothesis is wrong. This would mean p has to be below 0.05, which has statistical significance in that observations made would be considered extreme if the null were true. By having a large sample size, it becomes more likely that the results would average out to the expected value. By having a larger sample size, it is more likely that the p is less than .05 because the results are closer to the actual proportion, which makes it more likely that the null hypothesis is rejected. Due to that, since J has less of a sample size, J is more likely to make a type 2 error.
+
+
+### Exercise 4: Working backwards
+
+Problem 5.24 on page 203
+
+For the sample proportion for the p-value equal .01 with a sample size of 1,429, we need to find the z-score that is assocaited to the p-value of .01. For a two-tailed test, the z-score that corresponds with .01 is approximately 2.576.Now, we can find the sample proportion by using the Z-score equation. After solving for sample proportion, the answer is .9204.
+
+
+### Exercise 5: What happens when the null is false?
+
+For this exercise, we are working with the same dataset and setup as Lab 6. You should load the data and complete the set-up steps.
+
+```{r}
+download.file("http://www.openintro.org/stat/data/nc.RData", destfile = "nc.RData")
+load("nc.RData")
+nc_smoker <- nc %>% filter(habit=="smoker")
+phat <- mean(nc_smoker$lowbirthweight=="low")
+```
+
+Recall that on lab 3, we were working with a random sample of 126 smoking mothers where 14.3% had low-weight babies ($\hat{p}=0.143$). We tested the null hypothesis that $p=0.1$ and failed to reject the null using our sample. To better understand the meaning of a p-value, we then simulated 100,000 samples from a hypothetical population in a world where the null hypothesis was true. 
+
+Now we will imagine we live in a world where the null hypothesis is false. Suppose 
+that $p=0.13$, meaning that smoking mothers really are more likely to have underweight babies than the population as a whole. Let's create a hypothetical population:  
+
+```{r}
+popsize <- 100000
+new_pop <- data.frame(lowbirthweight = c(rep(0, 0.87*popsize), rep(1, 0.13*popsize))) 
+```
+
+Now let's repeat our previous simulation. Note that we as researchers don't **know** that the truth is 0.13, so this information will not be plugged in anywhere. We are still testing the null that p=0.1.
+
+```{r}
+library(infer)
+set.seed(311)
+p0 <- 0.1
+n <- 126
+true_sd <- sqrt(p0*(1-p0)/n)
+new_results <- new_pop %>%
+        infer::rep_sample_n(size = 126, reps = 10000) %>%
+        summarise(phat = mean(lowbirthweight),
+                  se = sqrt(phat*(1-phat)/126),
+                  me = 1.96 * se,
+                  lower = phat - me,
+                  upper = phat + me,
+                  CI_covers_truth = (lower <= 0.13 && upper >= 0.13),
+                  CI_covers_null = (lower <= p0 && upper >= p0),
+                  zscore = (phat-p0)/se,
+                  pval = 2*(1-pnorm(abs(zscore))),
+                  reject_null = pval <= 0.05)
+```
+
+a. What was the largest observed $\hat{p}$? The smallest?
+
+```{r}
+min(new_results$phat)
+max(new_results$phat)
+```
+The largest observed phat is approximately 0.254 and the smalled was approximately 0.032
+
+b. How many times did you make a type 1 error?
+
+```{r}
+# Code if necessary
+```
+Type 1 error happened 0 times because since the null hypothesis has to be true in order for the type 1 error to occur, and since the null hypothesis is null, it isn't possible for a type 1 error.
+
+c. How many times did you make a type 2 error?
+
+```{r}
+interval <- filter(new_results, reject_null == "FALSE")
+nrow(interval)
+```
+Type 2 error was made 8,596 times.
+
+d. Would it have been reasonable to observe a sample such as our original sample (``nc`` dataset) in a population where $p=0.13$? To explain your answer, make a histogram of all of the ``phats`` in ``new_results`` and add a vertical line representing your original sample.
+
+```{r}
+ggplot(data = NULL, aes(x=new_results$phat)) + geom_histogram(binwidth = 1/126) +  geom_vline(xintercept= phat, col = "red")
+```
+It would be reasonable to observe a sample such as our original sample where p = 0.13 because it is not too far away from the mean in the normal distribution and falls within two standard deviations.
+
+e. On the lab, you failed to reject the null that p=0.1. Based on this simulation, are you convinced that p really is 0.1? In other words, did you prove the null? Explain your answer, using your results from part d for support. 
+
+I'm not convinced that p really is 0.1, because there is not enough evidence in the above graph where phat is around 0.14 and p is 0.1 and the distribution shows that 0.14 is not extreme. This means that we cannot reject the null hypothesis, but that also doesn't mean that we proved the null is wrong. Instead, we have proved the null hypothesis could be possibly right. Since there's too much uncertainty to commit to the null being proved, when we've now failed to reject p = .13 or p = .1, which means that no nulls have been proven at all.

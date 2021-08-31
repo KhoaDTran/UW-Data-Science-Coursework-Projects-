@@ -1,0 +1,105 @@
+---
+title: "Lab 3"
+author: "Khoa Tran"
+date: "01/28/20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(oilabs)
+```
+
+* * *
+
+### Exercise 1
+
+```{r}
+coin_outcomes <- c("heads", "tails")
+set.seed(3111)
+sim_fair_coin <- sample(coin_outcomes, size = 100, replace = TRUE)
+sim_fair_coin %>% table
+```
+
+Of these 100 flips, 48 came up as heads.
+
+### Exercise 2
+
+```{r}
+set.seed(111)
+sim_unfair_coin <- sample(coin_outcomes, size = 100, replace = TRUE, 
+                          prob = c(0.2, 0.8))
+sim_unfair_coin %>% table
+```
+
+### Exercise 3
+
+```{r}
+set.seed(555)
+dice_outcomes <- c(1,2,3,4,5,6)
+sim_fair_die <- sample(dice_outcomes, size = 20, replace = TRUE)
+sim_fair_die %>% table
+```
+
+### Exercise 4
+
+```{r}
+kobe_basket <- read.delim("http://anna-neufeld.github.io/Stat311/oiLabs/Week4/kobe_basket.csv", header=TRUE, sep=",")
+calc_streak <- function(shots) {
+  hits <- c(0, shots=="H", 0)
+  misses <- which(hits==0)
+  streaklengths <- diff(misses)-1
+  return(data.frame(length= streaklengths))
+}
+```
+
+```{r}
+kobe_streak <- calc_streak(kobe_basket$shot)
+ggplot(data = kobe_streak, aes(x = length)) +
+  geom_histogram(binwidth=1)
+kobe_streak %>% summarize(mean = mean(length), median = median(length))
+```
+
+The median is 0 and is a more accurate measurement for the measure of the center of the data because it is a right skew, making the mean more susceptible to the outliers and can't be an accurate measure of the center.
+
+### Exercise 5
+
+    
+```{r}
+shot_outcomes <- c("H", "M")
+sim_basket <- sample(shot_outcomes, size = 100, replace = TRUE, prob = c(0.45, 0.55))
+sim_basket %>% table
+```
+    
+
+### Exercise 6
+```{r}
+set.seed(500)
+shot_outcomes <- c("H", "M")
+sim_basket <- sample(shot_outcomes, size = 133, replace = TRUE, prob = c(0.45, 0.55))
+sim_basket %>% table
+```
+
+### Exercise 7
+
+Of the 133 shots, 61 shots were hits.
+
+### Exercise 8
+```{r}
+sim_streak <- calc_streak(sim_basket)
+max(kobe_streak)
+```
+
+### Exercise 9
+
+```{r}
+max(sim_streak)
+```
+
+### Exercise 10
+```{r}
+ggplot(data=sim_streak, aes(x=length)) + geom_histogram(binwidth=1)
+ggplot(data=kobe_streak, aes(x=length)) + geom_histogram(binwidth=1)
+```
+
+For both models. the distribution was very similar as an independent shooter with 0.45 probability shots made can just easily have a "hot hand". Using this comparision, there is no substainial evidence of Kobe having a "hot hand".

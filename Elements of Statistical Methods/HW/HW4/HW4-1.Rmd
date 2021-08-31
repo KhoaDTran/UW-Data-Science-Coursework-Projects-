@@ -1,0 +1,202 @@
+---
+title: "Stat 311, HW4"
+author: "Khoa Tran"
+date: "Wednesday Feb 12"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(oilabs)
+```
+
+### Instructions
++ This homework is due on Wednesday Feb 12 by midnight. No late work is excused unless prior arrangements have been made with the instructor. The dropbox will remain open for 8 hours past the deadline. However, submissions made during this time will be penalized by at least 20% and maybe even as much as 50%.
++ Please answer ALL questions (including those that do not involve R) in the locations marked in this template. Remember to periodically **knit** your document to check that the output appears as you want it to; you will be turning in your knit html document. 
++ You will need to upload this document in CANVAS. Please be sure to check that your file was uploaded correctly. It does not hurt to screenshot verification of the upload as CANVAS can be glitchy on occasion.
++  Please answer the questions in the order in which they are posed. Write in complete sentences, and support your answers where asked. 
+
+### Reading  (NOT OPTIONAL)
++ Sections 3.4, 3.5, 4.1 in OpenIntro (4th Addition) 
+
+* * *
+
+### Exercise 1: Keno
+
+Suppose you are going to Las Vegas to play Keno. Your favorite bet is $1 on a single number. When you win, they give you $3. When you lose, you get nothing. You have a 1 out 4 chance of winning. 
+
+a. Build a probability model for $X=\text{net gain}$ in one play. (Net gain is the amount you receive minus the cost of playing, and yes, it can be -1)
+
+   Outcome values         Probability
+   
+   +$2                    .25
+   -$1                    .75
+
+b. What is the expected value of $X$? Interpret this number with a fully formed sentence.
+
+   The expected value is E($x$) = (-1 * .75) * (2 * .25) = -0.25. This means that you expect to be down 25 cents after every play.
+   
+
+c. Is Keno a *fair* game. Why or why not?
+
+   Keno is an unfair game. 
+   This is because the expected value is a negative number as it is expected for you to be down 25 centers after every play. The cost to play is much higher than the expected value of gain, which is 1 dollar vs -25 cents.
+
+d. What is the standard deviation $X$? Interpret this number with a fully formed sentence. 
+
+   SD($X$) = sqrt(((2 - (-0.25))^2 * 0.25) + ((-1 - (-0.25))^2 * 0.75)) = 1.29.
+   This number informs us that 68% of the data will fall within +1.04 and -1.54.
+
+
+# Exercise 2: More Fun Playing Keno
+
+Despite your better judgment, you play Keno under the terms specified previously. Let $\bar{X}$ denote the average net gain after 100 plays. That is:
+\[ \bar{X} = \frac{1}{100}(X_1 + X_2 + \dots + X_{100}) \]
+
+
+where $X_i$ is the net gain from game $i$. 
+
+a. $\bar{X}$ is a linear combination of the $X_i$'s. What are the coefficients of the linear combination?
+ 
+   1/100
+
+b. Calculate the expected value of $\bar{X}$. State any results you are using.
+
+   The expected value for one play is -0.25, so for $\bar{X}$, it would be the same because you have to find the average of all the expected values, which would be (100 * (-0.25)) / 100 = -0.25.
+
+c. Calculate the standard deviation of $\bar{X}$. State any results you are using. Are you making any assumptions to do this calculation? State those as well.
+
+   0.129
+   The general equation for variance is E(X^2) - E^2(X). To do this calculation for $\bar{X}$, I used the previous variance result for just $X$ and with the linear combination, the variance is a^2 * V($\bar{X}$). For the other part, I did a summation calculation of V($X$), which is 1/100^2 for the a^2, and finally the square root for the standard devation. 
+
+d. Suppose $\bar{X}$ is the average based on 1,000 (not 100) plays. How do the calculations from parts b and c change? 
+
+   The expected value would remain the same because the average expected value still remains as E($X$), with the coefficients cancelling out. The standard deviation, however, would be reduced as the variance is reduced by a factor of 10 with summation and a^2 increases with a factor of 10.
+
+e. The law of large numbers states that averages of results from a large number of trials stabilizes around what is expected. Use what you have learned from part (d) to explain why this is so.
+
+   As the number of trials increased, the average result would stabilize around the expected value and the standard deviation decreases resulting in less variability with the results. 
+
+
+
+### Exercise 3: Think Inside the Box!
+
+ Consider a box which contains some tickets. Suppose a fraction, $p$, of the tickets have a "1" written on them; the remaining have a "0".
+ 
+ a. Let $X$ denote the number on a ticket which is randomly drawn from the box. Fill in the first blank in the following sentence with the expected value of $X$ and the second blank with the standard deviation of $X$.
+ 
+    We expect $X$ to be ___p______ give or take ____$\sqrt{(p(1-p))}$________
+ 
+    Outcome Value        Probability 
+    1                    p
+    0                    1-p
+ 
+ b. Let $\bar{X}$ denote the fraction of 1's in 10 draws made with replacement from the box. That is,
+ \[ \bar{X} = \frac{X_1 + X_2 + \dots + X_{10}}{10} \]
+ 
+    where $X_i$ denotes the number on the $ith$ draw. Fill in the first blank in the following sentence with the expected value of $\bar{X}$ and the second blank with the standard deviation of $\bar{X}$.  (To write the standard deviation symbolically, use the dollar sign like this:$\sqrt{ab/c}$ for instance)
+ 
+    We expect $\bar{X}$ to be ____p_____ give or take ___$\sqrt{((p(1-p))/10)}$_________
+ 
+    The expected value is p because the number of times the summation happens for E($\bar{X}$) is inverse to the coefficient, and therefore the expected value will always be p. The standard deviation is the square root of the variance, which is equal to E(X^2) - E^2(X). However, for $\bar{X}$, we can take the value for one draw's variance, and multiplying the value by 10, and then multiply by a^2, which is 1/(10^2) = 1/100 resulting in sqrt((p(1-p))/10). For the symbolic SD, a = p, b = 1-p, c = 10.
+
+### Exercise 4. Density Curves
+
+a) In each row of this table, assume the distribution is normal. Knowing any two of the mean, standard deviation, Q1 or Q3 is enough to determine the other two. Complete the table by filling in numbers for (i)--(iv). (You may use pnorm and qnorm in R and also use R as a calculator.)
+
+| Mean | SD | $Q_1$| $Q_3$ |
+|:--:  |:--:|:--:  |:--:   |
+| 10   | 5  |6.628 |13.37  |
+| 150  |30  | 120  |  180  |
+
+```{r, echo=T}
+qnorm(0.25, mean = 10, sd = 5, lower.tail = TRUE)
+qnorm(0.75, mean = 10, sd = 5, lower.tail = TRUE)
+x <- (120 + 180) / 2
+x
+std <- 150 - 120
+std
+```
+
+b) A study conducted by the Kaiser Foundation compared blood pressures for women having different numbers of children. Below are sketches of the [density curves](https://drive.google.com/file/d/1RO9FuVA89-GlnPRAnQzz9_DZXn9attH4/view?usp=sharing) for blood pressure (measured in mm) in women with 2 or 4 children. 
+
+(i) Is the *number of children* a woman has a numerical or categorical variable in the graphic. Support your answer.
+
+The number of children a woman has is a categorical variable in the graphic because it seperates the woman into two different categories, also no calculation can be done on the numbers.
+
+(ii) The caption for the y-axis is missing. What do the numbers on the $y$ axis tell us? (*Hint* look at the brief introduction to density histograms at the end of the slidedeck titled *Continuous Distributions*)
+
+The numbers on the $y$ axis is the density of each bin, which is the frequency of the x-value divided by the width of bin.
+
+(iii) True or false and explain: the increase in the number of children has an *additive* effect on blood pressure. 
+
+True this is because  on the graphic of the distribution graph of women with 4 children, the continous distribution shifts to the right showing that there is higher density of higher values of blood pressure. It is more of a normal distribution as well.
+
+(iv) Roughly, what is the height of the density curve for women with 4 children? Show your work.
+
+area of triangle = 1/2 * base * height
+      0.5 = 1/2 * 35 * height
+      height = 0.029
+
+(v) Blood pressures above 140 mmHg are considered unusually high. Which group has  a higher probability of exceeding 140-- the mothers of 2 children or 4 children? Explain how you know this. (You do not need to do calculations -- just use your eyeballs)
+
+The group of mothers with 4 children have a higher probability of exceeding 140 mmHg for blood pressure because the area spanning a certain width in a continuous distribution for a density curve corresponds to the probability for that certain width. So visually, if we calculate the area under 140 for both curves, the graph for mothers with 4 children would have a larger area resulting in a larger probability.
+
+### Exercise 5: Normal Approximations for Coin Flips
+
+If we coss a toin $n$ times and let $X$ be the number of heads that we observe, then $X$ is called a *Binomial Random Variable*. Suppose that we have 50 fair coins, so $n = 50$ and $p$, the probability of seeing heads on each toss, is $0.5$. Our tosses are independent of one another. 
+
+You know from your previous labs that the following code will simulate 1 realization of $X$. 
+```{r}
+coin_outcomes <- c(0,1)
+X <- sum(sample(coin_outcomes, size=50, replace = TRUE))
+```
+
+To get an idea of the distribution of the random variable $X$, we want to repeat this experiment many times and observe many values of $X$. The following code records 1000 realizations of $X$.
+
+```{r}
+set.seed(111)
+Xs <- replicate(1000, sum(sample(coin_outcomes, size=50, replace = TRUE)))
+```
+
+### Part A: 
+Make a histogram of the realizations of $X$. Use a ``binwidth`` of 1. Note that since Xs is just a one-dimensional vector, not a dataframe, you should set ``data = NULL`` and ``aes(x=Xs)`` in your call to ``ggplot()``. Describe the shape of the distribution. Does it look approximately normal? 
+
+```{r}
+ggplot(data=NULL, aes(x = Xs)) + geom_histogram(binwidth = 1)
+```
+
+### Part B:  
+Make a density histogram of your data ``Xs`` and then overlay a density curve for the theoretical normal distribution with the same mean and standard deviation as the data ``Xs``. Use exercise 3 on lab 4 for help with a density histogram and density curve. 
+
+```{r}
+meanXs <-mean(Xs)
+stdXs <- sd(Xs)
+ggplot(data = NULL, aes(x = Xs)) +
+        geom_blank() +
+        geom_histogram(binwidth = 1, aes(y = ..density..)) +
+        stat_function(fun = dnorm, args = c(mean = meanXs , sd = stdXs))
+```
+
+### Part C: 
+What happens if the coin is not fair? Make a dataset called ``Xs_unfair`` that holds 1000 realizations of ``Number of heads in 50 tosses`` for a coin that only comes up heads (X=1) with probability 0.05. Use ``set.seed(333)``. (See exercise 2 on lab 3 for help simulating an unfair coin). 
+```{r}
+set.seed(333)
+Xs_unfair <- replicate(1000, sum(sample(coin_outcomes, size=50, replace = TRUE, prob=c(0.95, 0.05))))
+```
+
+### Part D: 
+Make a density histogram of your data ``Xs_unfair`` and then overlay a density curve for the theoretical normal distribution with the same mean and standard deviation as the data ``Xs_unfair``. What do you observe? Does the data look approximately normal? Use exercise 3 on lab 4 for help with a density histogram and density curve. 
+
+```{r}
+Xsmean <-mean(Xs_unfair)
+Xsstd <- sd(Xs_unfair)
+ggplot(data = NULL, aes(x = Xs_unfair)) +
+        geom_blank() +
+        geom_histogram(binwidth = 1, aes(y = ..density..)) +
+        stat_function(fun = dnorm, args = c(mean = Xsmean, sd = Xsstd))
+```
+
+

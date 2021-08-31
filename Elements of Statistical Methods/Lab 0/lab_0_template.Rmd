@@ -1,0 +1,59 @@
+---
+title: "Lab 0"
+author: "Khoa Tran"
+date: "01/09/20"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(openintro)
+```
+
+* * *
+
+### Exercise 1: 
+
+```{r}
+128 * 42 - (145/9) + 1.7^4
+```
+
+The answer is 5368.241
+
+### Exercise 2: 
+
+```{r}
+x <- sqrt(1127)
+x
+```
+
+The square root of 1127 is 33.57
+
+### Exercise 3: 
+
+```{r}
+statistics_is_fun <- sqrt((1+2+3+4))
+statistics_is_fun
+```
+
+The square root of 1+2+3+4 is 3.16
+
+### Exercise 4: 
+
+```{r}
+(x + statistics_is_fun)/x
+```
+
+The answer is 1.09
+
+### Exercise 5: 
+
+```{r}
+z <- 12
+y <- 17
+z - y
+
+```
+
+I resolved the conflict by declaring the variables before the math function

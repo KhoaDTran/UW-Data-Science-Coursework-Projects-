@@ -1,0 +1,19 @@
+USE hw8;
+
+SELECT f.ethnic_name as ethnic_group, ARRAY_COUNT(country_num) as num_countries, f.pop as total_population
+FROM hw8.world as x, x.mondial.country as y, (SELECT DISTINCT c.`#text` as ethnic_name, SUM((float(c.`-percentage`)/100.0) * float(y.population)) as pop 
+				  							 FROM (CASE WHEN y.ethnicgroups IS MISSING 
+				  	 						 THEN []
+				  	 						 WHEN IS_ARRAY(y.ethnicgroups) 
+					 						 THEN y.ethnicgroups
+				  	 						 ELSE [y.ethnicgroups] END) as c
+					 						 GROUP BY c.`#text`) as f
+	LET country_num = (SELECT y2.name as country_name
+					  FROM hw8.world as x2, x2.mondial.country as y2,
+						(CASE WHEN y2.ethnicgroups IS MISSING 
+					 	THEN []
+					 	WHEN IS_ARRAY(y2.ethnicgroups) 
+						THEN y2.ethnicgroups
+					 	ELSE [y2.ethnicgroups] END) as f2
+					  WHERE f.ethnic_name = f2.`#text`)
+ORDER BY total_population DESC;

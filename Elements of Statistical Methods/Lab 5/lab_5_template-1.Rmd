@@ -1,0 +1,144 @@
+---
+title: "Lab 5: Sampling Distributions of Sample Proportions "
+author: "Khoa Tran"
+date: "02/20/20"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+ames <- read_csv("http://anna-neufeld.github.io/Stat311/oiLabs/Week6/ames.csv")
+```
+
+* * *
+
+### Exercise 1: 
+
+```{r}
+ames %>% select(Central.Air) %>% table() %>% prop.table()
+```
+
+### Exercise 2:
+
+```{r}
+ames <- ames %>% mutate(air = Central.Air=='Y')
+air <- ames$air
+pop_p <- mean(air)
+```
+
+The mean function can be used on 1s and 0s to calculate the population proportion
+
+### Exercise 3: 
+
+```{r}
+pop_sd <- sd(air)
+sqrt(pop_p*(1-pop_p))
+```
+
+The two standard deviations are almost the same, the only difference is after the 4th decimal point.
+
+
+### Exercise 4: 
+
+```{r}
+samp <- sample(air, size=50, replace=TRUE)
+p_hat <- mean(samp)
+```
+
+My proportion value is different than neighbors because the random seed is not set and not uniform in this class.
+
+### Exercise 5:
+
+On average the estimates seem is approximately equal to the population population proportion. There are values that are both below and above, but overall, they are similar enough.
+
+### Exercise 6:
+
+```{r}
+samp1 <- sample(air, size=20, replace=TRUE)
+samp2 <- sample(air, size=50, replace=TRUE)
+samp3 <- sample(air, size=200, replace=TRUE)
+mean(samp1)
+mean(samp2)
+mean(samp3)
+```
+
+The sample size of 200 seems to result to the closest to the truth, while the sample size of 20 has the most variability. This is supported by the Law of Large Numbers.
+
+### Exercise 7: 
+
+```{r}
+set.seed(111)
+phats_20 <- replicate(100000, mean(sample(air, size=20, replace=TRUE)))
+ggplot(data = NULL, aes(x=phats_20)) + geom_histogram()
+```
+
+This plot is left skewed with the center around 0.95.
+
+### Exercise 8
+
+```{r}
+mean(phats_20)
+pop_p
+```
+
+The mean of phats_20 is 0.9332 as it is almost identical to the true population proportion. 
+
+
+### Exercise 9
+
+```{r}
+sd(phats_20)
+pop_sd
+```
+
+The standard deviation of phats_20 is 0.0557. The standard deviation is less than the one computed in exercise 3 because the SD always decrease with more trials ans samplings.
+
+### Exercise 10
+
+```{r}
+set.seed(111)
+phats_20 <- replicate(100000, mean(sample(air, size=20)))
+phats_50 <- replicate(100000, mean(sample(air, size=50)))
+phats_200 <- replicate(100000, mean(sample(air, size=200)))
+```
+
+### Exercise 11
+```{r}
+ggplot(data = NULL, aes(x=phats_50)) + geom_histogram()
+ggplot(data = NULL, aes(x=phats_200)) + geom_histogram()
+```
+
+With phats_50, the center seems to be around the population parameter, and the skewness seems to be decreasing, but the distribution is becoming more continous and less discrete. For phats_200, the distribution is normal and the center is around where the population parameter.
+
+### Exercise 12
+
+The phats_200 is approximately normal but phats_50 and phats_20 aren't. As the sample size increases though, the sampling distribution gets closer to normal.
+
+### Exercise 13
+
+The conditions are met to apply the Central Limit Thereom with sample size of 200 but not 50 or 20 because they are too low. The sample size has to be big enough to utlize the Central Limit Thereom.
+
+### Exercise 14
+
+```{r}
+ggplot(data = NULL, aes(x = phats_200)) +
+        geom_blank() +
+        geom_histogram(bins=30,aes(y = ..density..)) +
+        stat_function(fun = dnorm, args = c(mean = pop_p, sd = sqrt((pop_p)*(1-pop_p)/200)), col = "tomato")
+```
+
+The empirical sampling distribution seems to approximately match the theoretical as the continuous distribution approximately follows the density curve.
+
+### Exercise 15
+
+```{r}
+lower <- pop_p - 1.96*pop_sd/sqrt(200)
+upper <- pop_p + 1.96*pop_sd/sqrt(200)
+sum(phats_200 > lower & phats_200 < upper)/length(phats_200)
+```
+
+A proportion of 0.95 of the sample approximately fell between the theoretical bounds.
+
+

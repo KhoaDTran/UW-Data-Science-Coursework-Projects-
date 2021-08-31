@@ -1,0 +1,5 @@
+.decl Q4(eid:EidType, name:NameType)
+
+Q4(x, y) :- Manager(a, b), Manager(b, x), Employee(x, y, _).
+
+.output Q4(IO=stdout)

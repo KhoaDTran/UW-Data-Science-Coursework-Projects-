@@ -1,0 +1,4 @@
+*.Rhistory
+*.lst
+hw2.db
+*.csv

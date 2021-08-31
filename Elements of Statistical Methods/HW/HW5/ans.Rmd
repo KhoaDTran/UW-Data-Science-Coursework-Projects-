@@ -1,0 +1,260 @@
+---
+title: "Stat 311, HW5"
+author: "Aaron Tsang"
+date: "Wednesday Feb 26"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(oilabs)
+```
+
+### Instructions
++ This homework is due on Wednesday Feb 26 by midnight. No late work is excused unless prior arrangements have been made with the instructor. The dropbox will remain open for 8 hours past the deadline. However, submissions made during this time will be penalized by at least 20% and maybe even as much as 50%.
++ Please answer ALL questions (including those that do not involve R) in the locations marked in this template. Remember to periodically **knit** your document to check that the output appears as you want it to; you will be turning in your knit html document. 
++ You will need to upload this document in CANVAS. Please be sure to check that your file was uploaded correctly. It does not hurt to screenshot verification of the upload as CANVAS can be glitchy on occasion.
++  Please answer the questions in the order in which they are posed. Write in complete sentences, and support your answers where asked. 
+
+### Reading  (NOT OPTIONAL)
++ Sections 4.3 and 5.1 in OpenIntro (4th Addition) 
+
+* * *
+
+### Exercise 1: Arachnophobia
+
+Problem 4.22 on page 157
+
+  *Write answer here*
+a) (1-0.07)^10 = 0.483 = probability that none gets it.
+   1 - 0.483 = 0.516. 
+   The probablity that at least one kid has arachnophobia is 52%
+   
+b) (10C2)(0.07^2 * 0.93^8) = 0.12338
+   The probability that exactly 2 kids have arachnophobia is approximately 12.3%.
+   
+c) (0.93)^10 + (0.07 * 0.93^9) * 10 = 0.8482
+   The probability that at most one suffers from arachnophobia is 84%.
+   
+d) Yes, because the probability that at most one suffers from arachnophobia is 84% and that is pretty high for a probability.
+
+
+### Exercise 2: Acceptance Sampling
+
+Random sampling from a large lot of manufactured items yields a number of defective items X with an approximate binomial distribution with p being the true proportion of defectives in the lot. A sampling plan consists of specifying the number, n, of items to be sampled and an acceptance number $a$. After n items are inspected, the lot is accepted if $X \leq a$ and is rejected if $X > a$. 
+
+a. For n=5 and a=0 calculate the probability of accepting the lot for values of p equal to 0, 0.1, 0.3, 0.5 and 0.9 and 1. 
+
+  *0, 0.00001, 0.031, 0.168, 0.59, 1*
+  *The 6 numbers shown above are the probability of accepting the lot according to the following the true proportion of defectives in the lot. If we take p = 0 for example, we see that the acceptance probability is 1.0. This is because, if the proportion of defectives in a lot is 0, then the probability of accepting that lot is 100%. *
+
+b. Graph the probability of lot acceptance as a function of p. This is called an *operating characteristic curve*. They key is to store your lists of ps and your list of probabilities as vectors in R, and then to use these as the X and Y axes in a ``geom_line()`` plot. The code below should get you started.
+
+```{r}
+ps <- c(0,0.1, 0.3, 0.5, 0.9, 1) #Fill in the values of p, separated by commas
+probs <-c(1, 0.59, 0.168, 0.031, 0.00001, 0) #Fill in the acceptance probabilities, separated by commas
+ggplot(data=NULL, aes(x=ps, y=probs)) + geom_line()
+```
+
+c. A quality control engineer is considering two different lot acceptance sampling plans: 
+
+   Plan 1: n=5, a=0
+   
+   Plan 2: n=100, a=20. 
+   
+Construct operating characteristic curves for both sampling plans. You can make separate plots. *Hint: use the normal approximation to a binomial to do calculations for the second plan*
+
+```{r, echo =T}
+
+
+pnorm(20, mean = (100)*(0), sd = sqrt((100 * 0 * (1-0))))
+pnorm(20, mean = (100)*(0.1), sd = sqrt((100 * 0.1 * (1-0.1))))
+pnorm(20, mean = (100)*(0.3), sd = sqrt((100 * 0.3 * (1-0.3))))
+pnorm(20, mean = (100)*(0.5), sd = sqrt((100 * 0.5 * (1-0.5))))
+pnorm(20, mean = (100)*(0.9), sd = sqrt((100 * 0.9 * (1-0.9))))
+pnorm(20, mean = (100)*(1), sd = sqrt((100 * 1 * (1-1))))
+
+probs_2 <- c(pnorm(20, mean = (100)*(0), sd = sqrt((100 * 0 * (1-0)))),
+pnorm(20, mean = (100)*(0.1), sd = sqrt((100 * 0.1 * (1-0.1)))),
+pnorm(20, mean = (100)*(0.3), sd = sqrt((100 * 0.3 * (1-0.3)))),
+pnorm(20, mean = (100)*(0.5), sd = sqrt((100 * 0.5 * (1-0.5)))),
+pnorm(20, mean = (100)*(0.9), sd = sqrt((100 * 0.9 * (1-0.9)))),
+pnorm(20, mean = (100)*(1), sd = sqrt((100 * 1 * (1-1)))))
+
+ggplot(data=NULL, aes(x=ps, y=probs_2)) + geom_line() #Fill in the acceptance
+
+```
+
+d. If you were a seller producing lots with proportions of defectives between 0 and 10%, which plan would you prefer? Plan 1 or plan 2? Why?
+
+  *I would prefer Plan 2. This is because the graph of Plan 2 will have an 100 percent acceptance rate for proportions of defectives from 0.0 to around 0.125, so because 0.1 is lower than the 100% acceptance rate drop off, the buyer will more than likely buy your products, despite the proportion of defectives.*
+
+e. If you were a buyer wishing high protection against accepting lots with proportion of defectives over 30%, which plan would you prefer? Plan 1 or plan 2? Why?
+
+  *Plan 2. This is because, at around 0.3 of proportion of defectives on Plan 2, there is virtually 0% of acceptance rate, versus Plan 1, where there is still some area under the curve. For the buyer, if you look at Plan 2, if the proportion of defectives (x-axis) is at 30% of the lot as defectives, there is a close to 0 chance (y-axis) that the lot will be accepted. But, if you look at Plan 1, if the proportion is at 0.3, there is still a 12.5% chance of accepting the lot. So, the buyer will have higher protection with Plan 2.*
+
+
+
+### Exercise 3: Mix and match
+
+
+a. A town has 30,000 registered voters of whom 12,000 are Democrats. A survey organization takes a random sample of 1,000 voters of whom 330 are Democrats. Match each phrase with a number/description from the list below. Some numbers may be used multiple times. Others may not get used at all.
+
+| Phrase                       |     Number/Description |
+|:---:                         |:---:                   |
+|parameter                     |      ii                  |
+|denominator of statistic      |      v                  |
+|observed value of statistic   |      i                  |
+|standard error of statistic   |      iii                 |
+|expected value of statistic   |      ii                  |
+
+(i) 33%
+(ii) 40%
+(iii) 1.5%
+(iv) 30,000
+(v) 1,000
+
+
+b. Seatbelt use in WA state is at an all time high at 95%. Suppose we label each person in WA state with a "1" if they use seatbelts and "0" otherwise. 
+
+(i) Which of the following describes the population distribution of seatbelt use? 
+    
+    Box 1: 95 ones, 5 zeros
+    
+    Box 2: 5 ones, 95 zeros
+    
+    Box 3: 9 ones, 1 zero
+    
+   *Box 1*
+    
+    
+(ii) Suppose we randomly select one WA state resident and note whether they use or don't use seatbelts. Write the probability model for this random variable (call it X) by filling in the table below. 
+
+| x     | P(X=x)  |
+|:--:   | :--:    |
+|  1     |    0.95     |
+|  0     |    0.05     |
+
+
+(iii) What should we expect for this random variable? Calculate E(X). How does this compare with the mean of the numbers in the box? 
+
+*The E(X) should be 0.95.The mean is 0.5, which is much lower than the expected value. *
+
+```{r}
+##you can use R as a calculator to do any calculations
+E <-(1 * 0.95) + (0 * 0.05)
+E
+
+```
+
+(iv) What is the standard deviation of this random variable? Calculate SD(X). How does this compare with the standard deviation of the numbers in the box? (Hint: the numbers in the box are just a list of numbers)
+
+*They are the same.*
+
+
+```{r}
+##you can use R as a calculator to do calculations
+box_sd <- sqrt((0.95) * (1-0.95)^2 + (0.05)*(0-0.95)^2)
+binom_sd <- sqrt(0.95 * 0.05)
+box_sd
+binom_sd
+```
+
+(v) The state of Mississippi only has 60% seatbelt use. Suppose you randomly select a resident from Mississippi and note their seatbelt use. Call this random variable Y. How does SD(X) compare with SD(Y)? Which SD is larger? 
+*Intuitively* (not mathematically) why does the answer make sense?
+
+*Mississippi would vary more because they have a lower percentage of seatbelt use, which means that they have more variability in 1 and 0s.*
+
+```{r}
+##you can use R as a calculator to do calculations
+```
+ 
+### Exercise 4: Unexpected expense
+ 
+ Problem 5.4 on page 179 (a)--(g)
+ (Assume the value of the parameter $p$ is 50% for the calculation in part e)
+ a) the adults in the United States
+ b) If proportion of adults that can cover a $400 unexpected expense without borrowing money or going into debt.
+ c) 322/765 = 0.422
+ d) standard error
+ e) sqrt( (0.50 * (1-0.50)) / 765) = 0.018
+ f) She should be surprised because 0.5 is more than 2sd away which the range is 0.384 and 0.456. In other words, it is beyond the standard error of the parameter.
+ g) If p is 0.4, then the sd(x) becomes 0.0177, which is not very much off from p-hat. 
+ 
+ 
+### Exercise 5: Sampling Distribution of a Sample Mean in Ames Data
+
+In this exercise, you will work with the same Ames real estate data that you worked with in the lab. Recall that this dataset contains our entire **population of interest**, but for the sake of exploring the Central Limit Theorem we will pretend that we are only able to look at samples of 30 houses at a time. As a reminder, you can download the dataset with the code below.  
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+ames <- read.csv("http://anna-neufeld.github.io/Stat311/oiLabs/Week6/ames.csv")
+```
+
+On this problem we will explore the **sampling distribution** of the mean of the house prices (``SalePrice``) in the sample. You can extract the relevant variable with the following code:
+
+```{r}
+price <- ames$SalePrice
+```
+
+a. Make a graph showing the population distribution of price. Comment on the shape. 
+
+```{r}
+## Write code to make graph of price
+ggplot( data = NULL, aes(x = price)) + geom_histogram()
+```
+The shape of the graph is right-skewed.
+
+b. Obtain the population mean and population standard deviation of the `price` variable. 
+
+```{r}
+## Write code to compute mean / SD
+mean(price)
+sd(price)
+
+```
+
+ *The mean of the population is 180,796.1 and the SD is 79886.69.*. 
+
+In lecture, you learned about the Central Limit Theorem for Sample Proportions. It turns out that we also have a version for Sample Means. It says that under certain conditions, the **sampling distribution of the sample mean will be centered at the true population mean and have standard error equal to $\sigma/\sqrt{n}$, where $\sigma$ is the population standard deviation**. 
+
+
+c. Fill in the blanks: If we take repeated samples of size 30 from the population, the distribution of sample means will be **normal** with mean **180796.1** and standard deviation **14585.25**. 
+
+```{r}
+# Code if you are using R as a calculator to do any calculations
+repeated <- replicate(100000, mean(sample(price, size=30), replace = TRUE))
+
+79886.69 / sqrt(30)
+
+```
+
+
+d. You believe the central limit theorem sounds too good to be true. So you decide to *simulate* the sampling distribution because you can. Modify the code that you used to create ``phats_20`` on Lab 5 to make a variable called ``xbar_30``, which stores 100,000 sample means for samples of size 30. Report the mean and SD of ``xbar_30``. For reference, here is the relevant code chunk from the lab:
+
+```{r}
+xbar_30 <- replicate(100000, mean(sample(price, size=30, replace=TRUE)))
+xbar_30_sd <- sd(price)
+xbar_30_mean <- mean(price)
+```
+
+```{r}
+# Write code here, or remove eval=FALSE from chunk above and modify.
+```
+
+e. Modify the code below (also taken from the lab) to create a density histogram of your *simulated* sampling distribution with the theoretical sampling distribution overlaid. Are they close? *Hint: Change phats_200 to the appropriate variable, and then modify the mean and sd of the theoretical normal curve*. 
+
+```{r, eval=FALSE}
+ggplot(data = NULL, aes(x = xbar_30)) +
+        geom_blank() +
+        geom_histogram(bins= 30,aes(y = ..density..)) +
+        stat_function(fun = dnorm, args = c(mean = xbar_30_mean, sd = xbar_30_sd/sqrt(30)), col = "tomato")
+```
+
+```{r}
+## Write your modified code in this chunk, or remove "eval=FALSE" from the chunk above. 
+```
+
+

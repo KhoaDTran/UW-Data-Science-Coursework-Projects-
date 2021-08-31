@@ -1,0 +1,7 @@
+.decl Q1(eid:EidType, name:NameType)
+.decl AllEmp(eid:EidType, name:NameType)
+
+AllEmp(a,b) :- Employee(a, b, _).
+Q1(a, x) :- Manager(a, y) , Manager(a, z), AllEmp(a, x), y != z .
+
+.output Q1(IO=stdout)

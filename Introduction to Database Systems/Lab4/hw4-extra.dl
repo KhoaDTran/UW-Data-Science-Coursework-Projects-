@@ -1,0 +1,9 @@
+.decl UnderA(id:EidType)
+.decl UnderE(id:EidType, name:NameType)
+
+UnderA(x) :- Manager(x, y), Employee(y, a, _), a = "Alice".
+UnderA(x) :- UnderA(y), Manager(x, y).
+
+UnderE(x, y):- UnderA(x), Employee(x, y, _).
+
+.output UnderE(IO=stdout)

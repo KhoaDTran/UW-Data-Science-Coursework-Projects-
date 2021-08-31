@@ -1,0 +1,112 @@
+---
+title: "Lab 1: Exploring Numerical Data"
+author: "r Tran"
+date: "Date of lab session"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+source("http://www.openintro.org/stat/data/nycflights.R")
+```
+
+* * *
+
+### Exercise 1: 
+
+The observational unit is a flight since every row in the dataset is describing an individual flight.  
+
+### Exercise 2: 
+
+There were 68 flights to SFO in Feburary. 
+
+```{r}
+sfo_feb_flights <- nycflights %>%
+  filter(dest == "SFO", month == 2)
+```
+
+### Exercise 3: 
+
+```{r}
+sfo_delay_hist <- ggplot(data = sfo_feb_flights, aes(x = arr_delay)) +
+  geom_histogram(binwidth = 15)
+sfo_delay_hist
+```
+
+The distribution of the arrival delay of the set of flights headed to SFO is right skew with one flight as an outlier at 200 minutes arrival delay
+
+### Exercise 4: 
+
+```{r}
+sfo_mean <- sfo_feb_flights %>%
+  summarize(mean = mean(arr_delay), median = median(arr_delay))
+sfo_mean
+```
+
+The mean of arrival delay is -4.5 minutes and the median is -11 minutes. The mean is larger, which make sense because since the graph is a right skew, the mean has to be on the right, being larger than the median.
+
+
+### Exercise 5:
+
+Based only on the median, December is the month that has the longest average arrival delay at 4 minutes.
+
+```{r}
+nycflights %>%
+  group_by(month) %>%
+  summarize(median_ad = median(arr_delay), n_flights = n()) %>%
+  arrange(desc(median_ad))
+```
+
+### Exercise 6:
+
+Based only on the mean, the carrier that tends to have the most delayed arrival is Hawaiian Airlines Inc. with a average of 28 minutes.
+
+```{r}
+nycflights %>%
+  group_by(carrier) %>%
+  summarize(mean_cd = mean(arr_delay), n_flights = n()) %>%
+  arrange(desc(mean_cd))
+```
+
+### Exercise 7:
+
+Hawaiian Arilines Inc. operates flights with the highest average speed at 480 mph. 
+
+```{r}
+nycflights <- nycflights %>% mutate(speed = distance/(air_time/60))
+nycflights %>%
+  group_by(carrier) %>%
+  summarize(mean_cs = mean(speed), n_flights = n()) %>%
+  arrange(desc(mean_cs))
+```
+
+
+### Exercise 8:
+
+The flights that have longer distances will spend more time in the air at the top speed instead of spending time landing and taking off. As a result, the speed is of longer flights are usually faster. 
+
+```{r}
+ggplot(nycflights, aes(x=distance, y=speed)) +
+  geom_point(size = 2, shape = 23)
+```
+
+
+### Exercise 9:
+
+From the two charts, the carrier with the highest average distance is Hawaiian Airlines and the carrier with the highest average speed is Hwaiian Airlines. This airline operates with the highest average speed because their average distance travelled is the highest. Due to this, the airlines spends more time in the air, which results in the higher average speed. 
+
+```{r}
+carrier_distance <- nycflights %>%
+  group_by(carrier) %>%
+  summarize(mean_carrier_dis = mean(distance), n_flights = n()) %>%
+  arrange(desc(mean_carrier_dis))
+carrier_speed <- nycflights %>%
+  group_by(carrier) %>%
+  summarize(mean_carrier_speed = mean(speed), n_flights = n()) %>%
+  arrange(desc(mean_carrier_speed))
+top_carrier_dis <- top_n(carrier_distance,1, mean_carrier_dis)
+top_carrier_speed <- top_n(carrier_speed,1,mean_carrier_speed)
+top_carrier_dis
+top_carrier_speed
+
+```

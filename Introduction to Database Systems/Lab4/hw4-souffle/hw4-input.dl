@@ -1,0 +1,44 @@
+/*** Homework 4 - example Souffle code  ***/
+
+/************ Data model **************/
+
+.symbol_type EidType
+.symbol_type MidType
+.symbol_type NameType
+.symbol_type OfficeType
+
+
+/************ Relation declarations **************/
+
+.decl Employee(eid:EidType, name:NameType, office:OfficeType)
+.decl Manager(eid:EidType, mid:EidType)
+
+
+/************ Data imports: Souffle facts are tab-separated as    *****/
+/************ shown in the exampl.    *****/
+
+
+.input Employee(filename="DATA/Employee.facts")
+.input Manager(filename="DATA/Manager.facts")
+
+
+/************ (Optional) Print relations to screen  **************/
+
+
+.output Employee(IO=stdout)
+.output Manager(IO=stdout)
+
+
+/************* Question 0 (example) **************/
+
+/** Print only the names of all employees  **/
+
+.decl q0(n:NameType)
+
+q0(n) :- Employee(_, n, _).
+
+.output q0(IO=stdout)
+/* If you want to print the results to a file, uncomment the following code: */
+/* .output q0(filename="q0.out") */
+
+ 

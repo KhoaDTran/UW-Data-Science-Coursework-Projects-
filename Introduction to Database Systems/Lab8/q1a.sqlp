@@ -1,0 +1,11 @@
+USE hw8;
+
+SELECT r.name AS city
+FROM hw8.world AS x, x.mondial.country AS y, y.province AS p, 
+        (CASE WHEN p.city IS MISSING 
+        THEN [] 
+        WHEN IS_ARRAY(p.city) 
+        THEN p.city
+        ELSE [p.city] END) AS r
+WHERE y.name = 'Peru'
+ORDER BY r.name;

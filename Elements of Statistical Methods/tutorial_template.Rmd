@@ -1,0 +1,56 @@
+---
+title: "Tidyverse Tutorial Template"
+name: "Fill in name"
+date: "01/14/20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Scratchwork
+
+Use this section of the document for notes, scratchwork, and explorations. Remember that you should load your packages and your dataset in a code chunk. 
+
+```{r}
+library(tidyverse)
+source("http://www.openintro.org/stat/data/arbuthnot.R")
+glimpse(arbuthnot)
+
+```
+
+```{r}
+```
+
+```{r}
+```
+
+## Exercise 1
+
+```{r}
+```
+
+
+## Exercise 2
+
+```{r}
+```
+
+
+
+## Exercise 3
+
+```{r}
+```
+
+## Exercise 4
+
+```{r}
+```
+
+
+## Exercise 5
+
+```{r}
+```

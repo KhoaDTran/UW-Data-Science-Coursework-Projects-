@@ -1,0 +1,63 @@
+---
+title: "NBA Stats Analysis Midpoint"
+author: "Jared Pancho, Khoa Tran, Vincent Ma, Kevin Nguyen"
+date: "11/18/19"
+output: html_document
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(stringr)
+knitr::opts_chunk$set(echo = TRUE) 
+team_stats19 <- read.csv("data/2018-19combined.csv", stringsAsFactors = FALSE)
+team_stats17 <- read.csv("data/2016-17combined.csv", stringsAsFactors = FALSE)
+playoff_stats2019 <- read.csv("data/2019_playoff.csv", stringsAsFactors = FALSE)
+source("./scripts/Summary_Info.R")
+source("./scripts/Table_Summary.R")
+source("./scripts/Chart1.R")
+source("./scripts/Chart2.R")
+source("./scripts/Chart3.R")
+```
+## Introduction
+
+Our domain of interest is the progression of team stats between seasons, and how they can be used to predict playoff outcomes. Our datasets are taken from [Basketball Reference](`r basketball_source`), particularly the stats of teams throughout the 2016-2017 regular season, 2018-2019 regular season, and 2019 playoffs.
+
+## Summary Info 
+
+From the summary info script which takes in the 2018-2019 team stats data, multiple observations can be made. The team with the most wins was the `r get_summary_info(team_stats19)$most_wins`. The team that scored the most total points was `r get_summary_info(team_stats19)$most_points`. The team with the most offensive rebounds was `r get_summary_info(team_stats19)$most_orebounds`. On the other hand, the team with the least amount of assists was `r get_summary_info(team_stats19)$least_assists`. Finally, the team with the worst three point make to miss ratio was `r get_summary_info(team_stats19)$worst_three_pct`. From the 2018-2019 season, the Milwaukee Bucks and the Oklahoma City Thunder made the playoffs, while the New York Knicks and the Phoenix Suns didn't make it. While this shows that the more points scored, the better the chances of the team making the playoffs, this also shows that every offensive statistic matters when looking at a succesful team. Through the Suns and the Knicks, we believe that in order to NBA teams to make the playoffs, they have to be able to shoot threes and have great chemistry with high assist numbers. Teams can't just make the playoffs through points scored, they have to be consistently good and balanced at every single offensive statistic.
+
+## Summary Table
+
+The summary table below showcases a comparison between a team's wins vs their counting defensive stats, like defensive rebounds, steals and blocks. This takes in the dataset for team stats from the 2016-2017 season. From the table, a surprising insight is that teams in the 11-20 win range recorded more average defensive rebounds than any other interval. On the other hand, teams in the 61-70 win range expectedly reported more average steals and blocks than teams in other win ranges.
+
+```{r Table_Summary.R, echo = F}
+kable(get_table(team_stats17), col.names = c("Win Range", "Average D-Rebounds", "Average Steals", "Average Blocks"))
+```
+
+
+## Chart 1
+
+The bar chart below shows the relationships between a team's rank and their overall field goal percentage. Each of the bars represents a team ranked from left to right, and their heights show the team's field goal percentage. As one would expect, we do see that as the rank of the team goes down (moves right), their field goal percentage also slightly trends downward. There are a few teams that don't follow this trend, as we see that the 16th ranked team has a higher field goal percentage than both the 14th and 15th ranked teams. 
+
+```{r, echo = FALSE}
+chart_1_function(playoff_stats2019)
+```
+
+
+## Chart 2 
+
+The scatterplot below aims to show any correlation between blocks (a core defensive stat) and wins as scatterplots are specifically effiencient in showing any kind of relationships between two continuous variables. Each point is a team with their respective total blocks for the season (x-axis), and total wins (y-axis). There seems to be a low correlation between the stat "blocks" (which is a key indicator of defensive efficiency for each team) and and wins as there are teams above and below the line of best fit. The two end outliers seem to imply that the 20 win team was generally bad overall and the >550 block team was a relatively good team overall. The teams inbetween help imply that each team has success based of their players abilities and overall scheme. 
+```{r, echo = FALSE}
+chart2_function(team_stats19)
+```
+
+
+## Chart 3
+
+The boxchart below depicts the mean of total points scored for teams in the NBA playoffs compared to non-playoff teams for the year 2018-2019 season. This visualizations shows the point difference between the playoff teams that made the finals and teams that didn't. There's a clear difference between the teams that made the playoffs and teams that didn't, as the spread of total points scored isn't as much as teams that didn't make the playoffs. Additionally, the mean is much higher for teams that made the playoffs. The boxchart shows the range of points scored by successful teams compared to teams that wouldn't have qualified, showing clearly the average points that teams need to score to be able to have a chance at making the NBA playoffs. Even though points scored isn't the only statistic, this statistic determines who win games. Through this chart, teams can understand the necessary points required to have a chance at the playoffs, with the current level of the NBA.
+
+```{r, echo = FALSE}
+chart3_function(team_stats19, playoff_stats2019)
+```

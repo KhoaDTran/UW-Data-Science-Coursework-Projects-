@@ -1,0 +1,219 @@
+---
+title: "Stat 311, HW2"
+author: "Khoa Tran"
+date: "Wednesday Jan 22"
+output: oilabs::lab_report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(oilabs)
+```
+
+### Instructions
++ This homework is due on Wednesday Jan 22 by midnight. No late work is excused unless prior arrangements have been made with the instructor. The dropbox will remain open for 8 hours past the deadline. However, submissions made during this time will be penalized by at least 20% and maybe even as much as 50%.
++ Please answer ALL questions (including those that do not involve R) in the locations marked in this template. Remember to periodically **knit** your document to check that the output appears as you want it to; you will be turning in your knit html document. 
++ You will need to upload this document in CANVAS. Please be sure to check that your file was uploaded correctly. It does not hurt to screenshot verification of the upload as CANVAS can be glitchy on occasion.
++  Please answer the questions in the order in which they are posed. Write in complete sentences, and support your answers where asked. 
+
+### Reading  (NOT OPTIONAL)
++ Sections 2.1 in OpenIntro (4th Addition) 
+
+* * *
+
+### Exercise 1: Boxplots galore
+
+(i) Match each histogram with the boxplot that corresponds to it in the figure [here](https://drive.google.com/open?id=1EnEDgTFJwNXX30vu_WTLxsnwZ8Jj4VCk)
+
+| Histogram|  Boxplot |
+| :---:    |  :---    |
+| a        |  2       |
+| b        |  3       |
+| c        |  1       |
+
+  In histogram (a) I observe more or less same number of outliers towards both ends, left and right tail. As a result, it corresponds to boxplot (2) with a symmetrical distribution. In histogram (b) there is a uniform distribution with absence of outliers, which corresponds to boxplot 3 due to the symmetrical distribution, no outliers, along with a bigger IQR box than boxplot 2. In histogram (c), there is more outliers towards the right tail and none towards the left. This indicates a right skew and with the median of boxplot 1 being closer to the first quartile, histogram (c) matches boxplot (1).
+    
+(ii) The following [graphic](https://drive.google.com/open?id=1Entbz2IA7aNT9blj1eBgonasvFQ7bHSj) compares side by side boxplots of the distribution *number of births* by day of birth for all births in the U.S. in 2002. Write a brief statement describing the pattern of births. How might you explain the pattern?
+
+  From the chart, the number of births in the weekend, i.e. Saturday and Sunday, is lower than other days with no outlier of having higher or lower number of births than usual. The number of births in week days are higher compared to other days, with outlier values possessing lower number of births and not higher ones. Those outliers are mostly on holidays or days cloer to holidays. Number of births in holidays and adjacent to holdays is lower than other days in U.S. in 2002 because during those days, people are usually busy celebrating the holidays or the hospital has a lower number of staff members, which results to scheduling births on regular days in order to allow for safety of the paitent. Additionally, the number of births given during the weekends is usually lower than weekdays because there will be more staff members and paitents taking rest days during weekends, and people plan to give births during weekdays instead of weekends because of that reasoning. 
+ 
+
+### Exercise 2: How old is Prof Grove?
+
+The file [AgeGuesses](https://drive.google.com/open?id=1EsQlgH4D9wxycgKz4V4ILJxnJxPcdCZj) contains your guesses for Prof Grove's age. (One guess of 99 was deleted thank you very much!)
+
+Please download this file and save it in your working folder where you have saved your homework Rmd template. For most of you, this will be your Downloads folder.
+
+The following code chunk reads the file and stores it in a dataframe called <TT> AgeData </TT>.
+
+```{r, echo=T}
+AgeData<-read.csv(file="AgeGuesses.csv",header=TRUE)  
+glimpse(AgeData)    
+```
+Make a histogram showing the distribution of your guesses. Then answer the questions below.
+```{r, echo=T}
+ggplot(data = AgeData, aes(x = age)) + geom_histogram(binwidth = 5)
+```
+
+(i) Comment on the shape of the distribution. 
+  
+      The shape of the distribution is symmetrical with the histogram showing a fairly unimodal graph that covers around the 38-45 age range. There are outliers on both side but the graph is overall symmetrical.
+      
+(ii) Prof Grove is actually 52 years young! Do the guesses appear to vary randomly about 52 or are they systematically low/high. If the latter, how might you explain the source of bias?  
+
+     The guesses don't appear to vary randomly about 52, but it is systematically low. Even though a certain number of students guessed around the correct range, the guesses tended to be lower. There couple be a number of reasoning for this. First, it could be response bias due to the fact that age is a sensitive topic, which makes students tend to answer along the lower side of age ranges. As the student, you don't want to guess a higher age due to the level of authority Professor Grove has. Age is a sensitive topic as no one wants to make anyone feel like they're older than they actually are. Additionally, for all of the 39 students who didn't response, this could be from non-response bias as those who guessed a higher age are less likely to submit a response than those who guessed a lower age. 
+     
+(ii) Create a new variable containing the prediction errors using <TT> mutate </TT>. Use R to calculate the mean prediction error and its standard deviation. (We will learn later how to decide if the mean error is statistically significantly different from 0)
+```{r, echo=T}
+AgeData <- AgeData %>% mutate(predictionErr = (age-52))
+AgeData %>% summarize(mean = mean(predictionErr), sd = sd(predictionErr))
+```
+
+    
+### Exercise 3 Which Average?
+
+Each of the following describes an *average* that someone might want to report or know. In each case, state whether they should prefer the mean or the median and one sentence on why. There may be multiple answers-your reasoning is important.
+	  	
+(i) A track coach wants to determine an appropriate heart rate for an *average* athlete during their workouts. She chooses five of her runners and asks them to wear heart monitors. In the middle of the workout, she reads the following heart rates for the five athletes: 130, 135, 140, 145, 325. 
+	 
+  Median
+  
+	Reason: The data has the outlier value of 325. Due to this outlier, it will create a skewed distribution, which the median is not affected by but the mean is susceptible to outliers. 
+	  
+(ii) A journalist is writing an article, the main point of which is that an *average* professional basketball player is ridiculously over-paid.
+
+  Median
+  
+  Reason: The distribution of the pay for professional basketball players is very skewed as few players have high salary, while the rest of the players have a very low pay compared to them. For such a skewed distribution, only the median should be used as it isn't affected by the outliers, while the mean is susceptible by outliers. 
+
+(iii) Middletown (pop 100,000 households) wants to know how much an *average* home in their town is worth, so they can estimate the total value of all the town's homes.
+
+  Mean
+  
+  Reason: Even though the distribution of the value of the town's homes is highly skewed with few houses in the high value range and others in the normal range, to estimate the total value of all the town's homes, the mean has to be calculated and multiplied by the number of households in order to get the total value of all the town's homes. 
+    	
+(iv) A researcher wants to know the number of years an *average* patient with dementia lives after diagnosis. 
+
+  Median
+  
+  Reason: The distributioon of the number of years a patient with dementia lives after diagnosis is very skewed as very few patients live longer, while the rest of them are just in the normal value, since dementia is incurable. For skewed distributions, only the median is effective as it isn't affected by outliers, whereas the mean is more susceptible to it. 
+
+### Exercise 4: Family Size
+
+The following shows [data](https://drive.google.com/open?id=1GeuxHII5YvBvVIqiTBgslU_bYvtwM_xZ) on family size for two representative sets of 100 families from 1967 and the other from 1997. 
+
+(i) Find the mean family size in 1967. Also for 1977 (You can use R as a calculator)
+
+```{r, echo=T}
+num_child_1967 <- 0:8
+num_fam_1967 <- c(5,10,21,28,17,7,4,3,5)
+mean_1967 <- sum(num_child_1967*num_fam_1967)/sum(num_fam_1967)
+mean_1967
+```
+  
+  The mean family size in 1967 is 3.24.
+
+```{r, echo=T}
+num_child_1977 <- 0:8
+num_fam_1977 <- c(15,22,25,18,10,2,4,2,2)
+mean_1977 <- sum(num_child_1977*num_fam_1977)/sum(num_fam_1977)
+mean_1977
+```
+ 
+  The mean family size in 1977 is 2.3.
+
+(ii) Find the standard deviation of family size for 1967. Also for 1977 (You can use R as a calculator to implement the steps for calculating the SD)
+
+```{r, echo=T}
+val_1967 <- sum((num_child_1967^2)*num_fam_1967)/sum(num_fam_1967)
+sd_1967 <- val_1967 - (mean_1967^2)
+sd_1967
+```
+  
+  The standard deviation of family size for 1967 is 3.54.
+
+```{r, echo=T}
+val_1977 <- sum((num_child_1977^2)*num_fam_1977)/sum(num_fam_1977)
+sd_1977 <- val_1977 - (mean_1977^2)
+sd_1977
+```
+  
+  The standard deviation of family size for 1977 is 3.35.
+ 
+ (iii) Would a household with no children be considered *unusual* in 1967?  How about in 1977? Support your answer.
+ 
+  For 1967, no, a household with no children is not considered unusual because the mean was 3.24 and the standard deviation is 3.54, which makes having zero children in the family fall within the first standard deviation. To be unusal, it has to be more than two standard deviation away. For 1977, no, it would not be considered unusual because the mean was 2.3 and the standard deviation is 3.35, which makes 0 children fall within  one standard deviation, making this not unsual. 
+ 
+
+### Exercise 5: Departure Delays by Origin Airport
+
+This homework exercise refers to the same ``nycflights`` data that you worked with in lab 1. In the lab, we studied how departure delays vary by month. Now we will study how departure delays vary by departing airport. As a first step, you will need to make sure that you have the appropriate libraries and the relevant dataset loaded in your RMarkdown file. 
+
+```{r, message=FALSE}
+library(tidyverse)
+source("http://www.openintro.org/stat/data/nycflights.R")
+```
+
+a) First, create a visual summary of the `dep_delay` variable, broken down by departing airport (`origin`). Since `dep_delay` is quantitative and `origin` is categorical, a nice option is side-by-side boxplots of `arr_delay` for each origin airport. 
+*Hint: To create side by side boxplots using `ggplot`, we should specify:*
+  * `data = nycflights`
+  * `aes(x=origin, y=dep_delay)`
+  *  `geom_boxplot`
+Create this graphic and describe what you see. Explain briefly (two sentences max) why this is not a very useful graph.  
+
+```{r}
+ggplot(data = nycflights, aes(x = origin, y = dep_delay)) + geom_boxplot()
+```
+  
+  This is not a very usefu graph because there are some very far outliers that causees the whole graph to shrink down. As a result, the mean, IQR, and whiskers aren't clear enough to be located, which means that there's no real data to perceive as we can't tell the data spread, median, whiskers, and IQR.
+
+b) Next, let's compare numerical summaries of `dep_delay` across the three `origin` airports. Using `group_by()` and `summarize()`, print out the mean and median `dep_delay` for each of the three `origin` airports.
+
+```{r}
+nycflights %>% group_by(origin) %>% summarize(mean = mean(dep_delay), median = median(dep_delay)) %>% arrange(desc(mean), desc(median))
+```
+
+c) What explains the big differences between the means and the medians? Based on the shape of the distributions, do you prefer to compare the aiports using the mean or the median? 
+
+```{r}
+EWRflights <- nycflights %>% filter(origin == "EWR")
+JFKflights <- nycflights %>% filter(origin == "JFK")
+LGAflights <- nycflights %>% filter(origin == "LGA")
+ggplot(data = EWRflights, aes(x = dep_delay)) + geom_histogram()
+ggplot(data = JFKflights, aes(x = dep_delay)) + geom_histogram()
+ggplot(data = LGAflights, aes(x = dep_delay)) + geom_histogram()
+```
+  
+  The big difference between the mean and median is because of the outliers of flights that came very late to each airport. Since the histogram is a right skew for all of the individual airports, the value of the mean is very susceptible by the outliers, which results to the mean being larger than the median.
+
+Practically speaking, most travelers probably don't care if their flight *departs* late as long as it *arrives* on time. Furthermore, travelers are likely not sensitive to delays of 10 minutes or less. Let's define a `delayed_departure` flight to be one that leaves more than 10 minutes late (``dep_delay > 10``. ), and let's define a `delayed_arrival` flight to be one that arrives more than 10 minutes late (``arr_delay > 10``. )
+
+d) `mutate` the `nycflights` dataset to contain two new variables. The first,  `delayed_departure`, stores `TRUE` if `dep_delay > 10` and `FALSE` otherwise. The second, `delayed_arrival`, stores `TRUE` if `arr_delay > 10` and `FALSE` otherwise. **Hints**:
+
+- Refer to the "Manipulating a Dataset" section of the R tutorial (specifically the example with `boy_to_girl_ratio` and `boy_prop` to see how to add two new variables to a dataset.
+- Refer to the `more_boys` example in the tutorial for an example of working with TRUE/FALSE variables.
+
+```{r}
+nycflights <- nycflights %>% mutate(delayed_departure = dep_delay > 10, delayed_arrival = arr_delay > 10)
+```
+
+e) Which of the three `origin` airports had the highest proportion of flights that ended up delayed upon arrival? To answer this question, you should:
+
+- `group_by` origin
+- `summarize()` by `sum(delayed_arrivals)/n()`
+
+```{r}
+nycflights %>% group_by(origin) %>% summarize(proportion_delay = sum(delayed_arrival)/n())
+```
+
+  Airport EWR has the highest proportion of delay upon arrival at 0.30.
+
+f) What percentage of flights that left their origin late (`delayed_departure==TRUE`) ended up arriving to their destination on time or early  (`delayed_arrival==FALSE`)? To solve this problem, note that it is possible to `group_by` two variables at once. Interpreting the output of the following code should help you reach your answer: `nycflights %>% group_by(delayed_departure, delayed_arrival) %>% summarize(num_flights = n())` 
+
+```{r}
+nycflights %>% group_by(delayed_departure, delayed_arrival) %>% summarize(num_flights = n())
+```
+ 
+  According to the data, 1786 flights left their origin late but arrived to their destination on time by 10 minutes or early. There is a total of 8271 flights, which left their origin late. AS a result, 21.59% of flights that left their origin late, ended up arriving to their destination on time or early.
